@@ -1,23 +1,36 @@
-
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+
+      <Image
+        source={{
+          uri: 'https://img.magnific.com/vector-gratis/veterinario-muchos-tipos-animales_1308-65733.jpg?semt=ais_hybrid&w=740&q=80'
+        }}
+        style={styles.imagenVeterinaria}
+      />
+
       <Text style={styles.titulo}>
         Desarrollo movil
       </Text>
 
       <Text style={styles.texto}>
-         Mi primera app
+        Mi primera app
       </Text>
 
       <Text style={styles.texto}>
         Ing sistemas
       </Text>
+
       <Text style={styles.mensaje}>
         care cui
       </Text>
+
+      <Pressable>
+        <Text>Inicio</Text>
+      </Pressable>
+
     </View>
   );
 }
@@ -27,6 +40,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  imagenVeterinaria: {
+    width: 300,
+    height: 200,
+    marginTop: 20,
   },
 
   titulo: {
