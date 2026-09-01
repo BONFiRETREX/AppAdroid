@@ -1,43 +1,67 @@
-import { StyleSheet, View, Text, Image, Pressable,Alert } from 'react-native';
+import { StyleSheet, 
+  Text, 
+  Image, 
+  Pressable, 
+  Alert, 
+  View , 
+  ActivityIndicator, 
+  KeyboardAvoidingView, 
+  Modal, 
+  Platform,
+  ScrollView,
+  Switch,
+  TextInput,
+
+ } from 'react-native';
+
+import { LinearGradient } from 'expo-linear-gradient';//fondo bonito linegradient
+import { Link } from 'expo-router';
+import { useState } from 'react';
+//PARA LA BARRA DE NAVEGADOR DE CELULAR HORA ETC señal de wif todo 
+ import { StatusBar } from 'expo-status-bar';
 
 export default function HomeScreen() {
+  // ESTADOS formularios con nombre y se obtenga con setnombre, y sus demas para el formulario con set se guarda
+   
   return (
-    <View style={styles.container}>
 
+    <LinearGradient
+      colors={['#8193e6', '#BFE3C8', '#5C9F71']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.container}>
+      
       <Image
         source={{
-          uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png'
+          uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
         }}
         style={styles.imagenVeterinaria}
       />
 
-      <Text style={styles.titulo}>
-        Huellitas Veterinaria
-      </Text>
+      <Text style={styles.titulo}>Huellitas Veterinaria</Text>
 
-      <Text style={styles.texto}>
-         Duban Giron Vt. 
-      </Text>
+      <Text style={styles.texto}>Duban Giron Vt.</Text>
 
       <Text style={styles.texto}>
         Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.
       </Text>
 
-      <Text style={styles.mensaje}>
-        
-      </Text>
+      <Link href="/citas" asChild>
+  <Pressable>
+    <Image
+      source={{
+        uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png',
+      }}
+      style={styles.imagenBotonInfo}
+    />
+  </Pressable>
+</Link>
 
-      <Pressable onPress={() => Alert.alert('Agenda tu cita',
-      'Comunícate con nuestra veterinaria para elegir el día y la hora de atención para tu mascota.')}>
-  <Image
-        source={{
-          uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png'
-        }}
-        style={styles.imagenBotonInfo}
-      />
-</Pressable>
 
-    </View>
+
+
+
+    </LinearGradient>
   );
 }
 
@@ -46,7 +70,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#DDF3E4', // verde claro pastel
   },
 
   imagenVeterinaria: {
@@ -54,6 +77,7 @@ const styles = StyleSheet.create({
     height: 410,
     marginTop: -130,
   },
+
   imagenBotonInfo: {
     width: 100,
     height: 100,
@@ -70,12 +94,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 10,
     fontFamily: 'serif',
+    textAlign: 'center',
+    paddingHorizontal: 25,
   },
-
-  mensaje: {
-    fontSize: 18,
-    marginTop: 30,
-    fontFamily: 'serif',
-  },
- 
 });
