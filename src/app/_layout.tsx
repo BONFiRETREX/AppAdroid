@@ -1,75 +1,56 @@
-
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { Stack } from 'expo-router'; //esto sirve para las rutas este automaticamente gestiona la ruta como tal 
 import { useColorScheme } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
-
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider
+      value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+
+      <Stack>
+{/* screenOption para utilizarlos en todas las vistas y se exportan en crear la pantalla principal */}
+        {/* contiene todas las pantallas de la aplicacion, ayuda con el expo route */}
+        {/* cree la pantalla con el stack.screen */}
+        <Stack.Screen
+        
+        
+          name="index"
+          options={{
+            title: 'Huellitas Veterinaria',
+          }}
+        />
+
+        <Stack.Screen
+          name="citas"
+          options={{
+            title: 'Agendar cita',
+          }}
+        />
+
+        <Stack.Screen
+          name="servicios"
+          options={{
+            title: 'Servicios',
+          }}
+        />
+
+        <Stack.Screen
+          name="producto"
+          options={{
+            title: 'Detalle del servicio',
+          }}
+        />
+
+        <Stack.Screen
+          name="contacto"
+          options={{
+            title: 'Contacto',
+          }}
+        />
+      </Stack>
+
     </ThemeProvider>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Stack } from 'expo-router';
-
-// export default function RootLayout() {
-
-//   return (
-
-//     <Stack>
-
-//       <Stack.Screen
-//         name="index"
-//         options={{
-//           title: 'Veterinaria Huellitas',
-//         }}
-//       />
-
-//       <Stack.Screen
-//         name="menu"
-//         options={{
-//           title: 'Motivo de consulta',
-//         }}
-//       />
-
-//       <Stack.Screen
-//         name="contacto"
-//         options={{
-//           title: 'Contacto',
-//         }}
-//       />
-
-//       <Stack.Screen
-//         name="producto/[id]"
-//         options={{
-//           title: 'Detalle del café',
-//         }}
-//       />
-
-//     </Stack>
-
-//   );
-
-// }
-
