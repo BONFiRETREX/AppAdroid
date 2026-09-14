@@ -1,3 +1,4 @@
+
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useColorScheme } from 'react-native';
@@ -16,3 +17,59 @@ export default function TabLayout() {
     </ThemeProvider>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Stack } from 'expo-router';
+
+// export default function RootLayout() {
+
+//   return (
+
+//     <Stack>
+
+//       <Stack.Screen
+//         name="index"
+//         options={{
+//           title: 'Veterinaria Huellitas',
+//         }}
+//       />
+
+//       <Stack.Screen
+//         name="menu"
+//         options={{
+//           title: 'Motivo de consulta',
+//         }}
+//       />
+
+//       <Stack.Screen
+//         name="contacto"
+//         options={{
+//           title: 'Contacto',
+//         }}
+//       />
+
+//       <Stack.Screen
+//         name="producto/[id]"
+//         options={{
+//           title: 'Detalle del café',
+//         }}
+//       />
+
+//     </Stack>
+
+//   );
+
+// }
+

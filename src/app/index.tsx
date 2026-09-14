@@ -1,7 +1,8 @@
 import { StyleSheet, 
   Text, 
   Image, 
-  Pressable, 
+  Pressable,
+   
   Alert, 
   View , 
   ActivityIndicator, 
@@ -15,7 +16,13 @@ import { StyleSheet,
  } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';//fondo bonito linegradient
+
+
 import { Link } from 'expo-router';
+// poner como comentario estoooooooo ------>>>>>>>>>>>>>>>>>>>>
+ import { router } from 'expo-router';
+
+
 import { useState } from 'react';
 //PARA LA BARRA DE NAVEGADOR DE CELULAR HORA ETC señal de wif todo 
  import { StatusBar } from 'expo-status-bar';
@@ -30,7 +37,7 @@ export default function HomeScreen() {
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
       style={styles.container}>
-      
+      <View style={styles.contenido}>
       <Image
         source={{
           uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
@@ -56,11 +63,31 @@ export default function HomeScreen() {
     />
   </Pressable>
 </Link>
+{/* PONER COMO COMENTARIO ESTO: ----------------->>>>>> */}
+{/* <Pressable onPress={() => router.push('/contacto')}>
+  <Image
+    source={{
+      uri: 'https://cdn-icons-png.flaticon.com/512/751/751381.png',
+    }}
+    style={styles.imagenclase7}
+  />
+</Pressable> */}
 
-
-
-
-
+  {/*  <Pressable
+  onPress={() =>
+    Alert.alert(
+      'Huellitas Veterinaria',
+      'Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.'
+    )
+  }>
+  <Image
+    source={{
+      uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png',
+    }}
+    style={styles.imagenBotonInfo}
+  />
+</Pressable> */}
+    </View>
     </LinearGradient>
   );
 }
@@ -97,4 +124,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 25,
   },
+  contenido: {
+  alignItems: 'center',
+},
+imagenclase7: {
+  width: 100,
+    height: 100,
+    marginTop: 10,
+},
 });

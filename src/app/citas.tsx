@@ -29,8 +29,9 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [procesando, setProcesando] = useState(false);
   const [resultados, setResultados] = useState('');
+  const [telefono, setTelefono]=useState('');
 
-  // FUNCION DEL BOTON
+  // FUNCION DEL BOTON IMPORTANTE PARA EL ESTUDIO
   const realizarPedidos = () => {
     // VALIDAMOS QUE TODOS LOS CAMPOS TENGAN INFORMACION
     if (
@@ -39,7 +40,8 @@ export default function HomeScreen() {
       raza.trim() === '' ||
       peso.trim() === '' ||
       edad.trim() === '' ||
-      tipoconsulta.trim() === ''
+      tipoconsulta.trim() === ''||
+      telefono.trim()==''
     ) {
       setResultados('Debes completar todos los campos');
       Alert.alert('Datos incompletos', 'Debes completar todos los campos');
@@ -61,7 +63,9 @@ Raza: ${raza}
 Peso: ${peso} kg
 Edad: ${edad} años
 Tipo de consulta: ${tipoconsulta}
-Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}`
+Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}
+telefono:${telefono}    `
+
       );
 
       setModalVisible(true);
@@ -166,6 +170,14 @@ Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}`
             value={tipoconsulta}
             onChangeText={setTipoconsulta}
           />
+            <Text style={styles.label}>Teléfono</Text>
+           <TextInput
+            style={styles.input}
+            placeholder="Ej. Max"
+            placeholderTextColor="#7A7A7A"
+            value={telefono}
+            onChangeText={setTelefono}
+          />
 
           <View style={styles.filaSwitch}>
             <View>
@@ -195,10 +207,15 @@ Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}`
 
           {resultados !== '' && !procesando && (
             <View style={styles.resultado}>
-              <Text style={styles.resultadoTitulo}>Resumen de la cita</Text>
+              
+              <Text style={styles.resultadoTitulo}>Resumen de la cita
+ 
+
+              </Text>
 
               <Text style={styles.resultadoTexto}>{resultados}</Text>
             </View>
+          
           )}
         </ScrollView>
 
@@ -211,21 +228,26 @@ Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}`
             <View style={styles.modalContenido}>
               <Text style={styles.modalIcono}>🐾</Text>
 
-              <Text style={styles.modalTitulo}>¡Cita solicitada!</Text>
-
+              <Text style={styles.modalTitulo}>¡Cita solicitada!
+   
+              </Text>
+                                  
               <Text style={styles.modalTexto}>
                 Gracias. Registramos la cita de {nombre}.
               </Text>
 
               <Text style={styles.modalTexto}>
                 Pronto nos comunicaremos contigo.
+              
               </Text>
+
 
               <Pressable
                 style={styles.modalBoton}
                 onPress={() => setModalVisible(false)}>
                 <Text style={styles.modalBotonTexto}>Entendido</Text>
               </Pressable>
+              
             </View>
           </View>
         </Modal>
@@ -414,4 +436,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+   
 });

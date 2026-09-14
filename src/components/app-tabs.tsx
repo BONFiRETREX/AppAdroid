@@ -23,7 +23,7 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="citas">
   <NativeTabs.Trigger.Label>Citas</NativeTabs.Trigger.Label>
   <NativeTabs.Trigger.Icon
-    src={require('@/assets/images/tabIcons/paw.png')}
+    src={require('@/assets/images/tabIcons/Formularios.png')}
     renderingMode="template"
   />
 </NativeTabs.Trigger>
