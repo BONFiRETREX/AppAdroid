@@ -18,6 +18,7 @@ export default function HomeScreen() {
       end={{ x: 0, y: 1 }}
       style={styles.container}
     >
+
       <ScrollView
         contentContainerStyle={styles.contenido}
         showsVerticalScrollIndicator={false}
@@ -46,14 +47,16 @@ export default function HomeScreen() {
           Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.
         </Text>
 
+
         {/* ========================= */}
-        {/* FORMULARIO - PRINCIPAL */}
+        {/* FORMULARIO */}
         {/* ========================= */}
 
         <Pressable
           style={styles.tarjetaFormulario}
           onPress={() => router.push('/citas')}
         >
+
           <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png',
@@ -64,10 +67,12 @@ export default function HomeScreen() {
           <Text style={styles.tituloFormulario}>
             Formulario
           </Text>
+
         </Pressable>
 
+
         {/* ========================= */}
-        {/* FILA 1 */}
+        {/* 4 OPCIONES EN UNA LÍNEA */}
         {/* ========================= */}
 
         <View style={styles.filaBotones}>
@@ -77,6 +82,7 @@ export default function HomeScreen() {
             style={styles.tarjetaPequena}
             onPress={() => router.push('/citas')}
           >
+
             <Text style={styles.icono}>
               📋
             </Text>
@@ -84,13 +90,16 @@ export default function HomeScreen() {
             <Text style={styles.tituloTarjeta}>
               Citas
             </Text>
+
           </Pressable>
+
 
           {/* CONTACTO */}
           <Pressable
             style={styles.tarjetaPequena}
             onPress={() => router.push('/contacto')}
           >
+
             <Image
               source={{
                 uri: 'https://cdn-icons-png.flaticon.com/512/751/751381.png',
@@ -101,21 +110,16 @@ export default function HomeScreen() {
             <Text style={styles.tituloTarjeta}>
               Contacto
             </Text>
+
           </Pressable>
 
-        </View>
-
-        {/* ========================= */}
-        {/* FILA 2 */}
-        {/* ========================= */}
-
-        <View style={styles.filaBotones}>
 
           {/* PRODUCTOS */}
           <Pressable
             style={styles.tarjetaPequena}
             onPress={() => router.push('/producto')}
           >
+
             <Text style={styles.icono}>
               🛒
             </Text>
@@ -123,50 +127,71 @@ export default function HomeScreen() {
             <Text style={styles.tituloTarjeta}>
               Productos
             </Text>
+
           </Pressable>
+
 
           {/* SERVICIOS */}
           <Pressable
             style={styles.tarjetaPequena}
             onPress={() => router.push('/servicios')}
           >
-            <Text style={styles.iconoServicios}>
+
+            <Text style={styles.icono}>
               🐾
             </Text>
 
             <Text style={styles.tituloTarjeta}>
               Servicios
             </Text>
+
           </Pressable>
 
         </View>
 
       </ScrollView>
+
     </LinearGradient>
   );
 }
 
+
 const styles = StyleSheet.create({
 
+  /* ========================= */
   /* CONTENEDOR */
+  /* ========================= */
+
   container: {
     flex: 1,
   },
 
+
+  /* ========================= */
   /* CONTENIDO */
+  /* ========================= */
+
   contenido: {
     alignItems: 'center',
     paddingBottom: 30,
   },
 
+
+  /* ========================= */
   /* IMAGEN PRINCIPAL */
+  /* ========================= */
+
   imagenVeterinaria: {
     width: 312,
     height: 310,
     marginTop: -20,
   },
 
+
+  /* ========================= */
   /* TÍTULO */
+  /* ========================= */
+
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
@@ -174,7 +199,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+
+  /* ========================= */
   /* TEXTOS */
+  /* ========================= */
+
   texto: {
     fontSize: 18,
     marginTop: 10,
@@ -183,8 +212,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
 
+
   /* ========================= */
-  /* FORMULARIO PRINCIPAL */
+  /* FORMULARIO */
   /* ========================= */
 
   tarjetaFormulario: {
@@ -198,8 +228,8 @@ const styles = StyleSheet.create({
   },
 
   imagenFormulario: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
   },
 
   tituloFormulario: {
@@ -207,51 +237,67 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2F7D4A',
     marginTop: 3,
+    fontFamily: 'serif',
   },
 
+
   /* ========================= */
-  /* FILAS */
+  /* 4 TARJETAS EN UNA LÍNEA */
   /* ========================= */
 
   filaBotones: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 15,
+    alignItems: 'center',
+    gap: 7,
     marginTop: 15,
   },
+
 
   /* ========================= */
   /* TARJETAS PEQUEÑAS */
   /* ========================= */
 
   tarjetaPequena: {
-    width: 130,
+    width: 82,
     height: 96,
     backgroundColor: '#d6eaec',
-    borderRadius: 18,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-     
   },
+
+
+  /* ========================= */
+  /* IMAGEN CONTACTO */
+  /* ========================= */
 
   imagenPequena: {
-    width: 65,
-    height: 65,
+    width: 42,
+    height: 42,
   },
+
+
+  /* ========================= */
+  /* ICONOS */
+  /* ========================= */
 
   icono: {
-    fontSize: 55,
+    fontSize: 38,
   },
 
-  iconoServicios: {
-    fontSize: 55,
-  },
+
+  /* ========================= */
+  /* TÍTULOS TARJETAS */
+  /* ========================= */
 
   tituloTarjeta: {
-    fontSize: 17,
+    fontSize: 12,
     fontWeight: 'bold',
+    fontFamily: 'serif',
     color: '#2F7D4A',
     marginTop: 3,
+    textAlign: 'center',
   },
 
 });
