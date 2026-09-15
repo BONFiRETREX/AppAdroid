@@ -2,8 +2,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable,
   ScrollView,
+  Pressable,
 } from 'react-native';
 
 import { router } from 'expo-router';
@@ -13,77 +13,105 @@ export default function Servicios() {
     <ScrollView
       contentContainerStyle={styles.contenido}>
 
-      <Text style={styles.titulo}>Nuestros servicios</Text>
-
-      <Text style={styles.subtitulo}>
-        Elige el servicio que necesita tu mascota.
+      <Text style={styles.titulo}>
+        Nuestros servicios
       </Text>
 
+      <Text style={styles.subtitulo}>
+        Conoce los servicios que ofrecemos para cuidar la salud de tu mascota.
+      </Text>
+
+
+      {/* CONSULTA GENERAL */}
       <View style={styles.tarjeta}>
-        <Text style={styles.icono}>🩺</Text>
 
-        <View style={styles.info}>
-          <Text style={styles.nombre}>Consulta general</Text>
-          <Text style={styles.descripcion}>
-            Revisión completa de la salud de tu mascota.
-          </Text>
-          <Text style={styles.precio}>$50.000</Text>
-        </View>
+        <Text style={styles.icono}>
+          🩺
+        </Text>
 
-        <Pressable
-          style={styles.boton}
-          onPress={() => router.push('/producto')}>
-          <Text style={styles.botonTexto}>Ver</Text>
-        </Pressable>
+        <Text style={styles.nombre}>
+          Consulta general
+        </Text>
+
+        <Text style={styles.descripcion}>
+          Revisión completa de la salud de tu mascota.
+          Permite detectar posibles problemas y realizar
+          un seguimiento de su estado de salud.
+        </Text>
+
+        <Text style={styles.precio}>
+          $50.000
+        </Text>
+
       </View>
 
+
+      {/* VACUNACIÓN */}
       <View style={styles.tarjeta}>
-        <Text style={styles.icono}>💉</Text>
 
-        <View style={styles.info}>
-          <Text style={styles.nombre}>Vacunación</Text>
-          <Text style={styles.descripcion}>
-            Aplicación y control de vacunas para mascotas.
-          </Text>
-          <Text style={styles.precio}>$35.000</Text>
-        </View>
+        <Text style={styles.icono}>
+          💉
+        </Text>
 
-        <Pressable
-          style={styles.boton}
-          onPress={() => router.push('/producto')}>
-          <Text style={styles.botonTexto}>Ver</Text>
-        </Pressable>
+        <Text style={styles.nombre}>
+          Vacunación
+        </Text>
+
+        <Text style={styles.descripcion}>
+          Aplicación y control de vacunas para mascotas.
+          Ayuda a prevenir diferentes enfermedades y
+          mantener actualizado su esquema de vacunación.
+        </Text>
+
+        <Text style={styles.precio}>
+          $35.000
+        </Text>
+
       </View>
 
+
+      {/* DESPARASITACIÓN */}
       <View style={styles.tarjeta}>
-        <Text style={styles.icono}>💊</Text>
 
-        <View style={styles.info}>
-          <Text style={styles.nombre}>Desparasitación</Text>
-          <Text style={styles.descripcion}>
-            Tratamiento preventivo para el bienestar de tu mascota.
-          </Text>
-          <Text style={styles.precio}>$30.000</Text>
-        </View>
+        <Text style={styles.icono}>
+          💊
+        </Text>
 
-        <Pressable
-          style={styles.boton}
-          onPress={() => router.push('/producto')}>
-          <Text style={styles.botonTexto}>Ver</Text>
-        </Pressable>
+        <Text style={styles.nombre}>
+          Desparasitación
+        </Text>
+
+        <Text style={styles.descripcion}>
+          Tratamiento preventivo para controlar parásitos
+          internos y externos y contribuir al bienestar
+          general de tu mascota.
+        </Text>
+
+        <Text style={styles.precio}>
+          $30.000
+        </Text>
+
       </View>
 
+
+      {/* REGRESAR */}
       <Pressable
         style={styles.regresar}
         onPress={() => router.back()}>
-        <Text style={styles.regresarTexto}>Regresar</Text>
+
+        <Text style={styles.regresarTexto}>
+          Regresar
+        </Text>
+
       </Pressable>
 
     </ScrollView>
   );
 }
 
+
 const styles = StyleSheet.create({
+
   contenido: {
     flexGrow: 1,
     padding: 22,
@@ -109,56 +137,40 @@ const styles = StyleSheet.create({
   tarjeta: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
-    padding: 18,
+    padding: 20,
     marginBottom: 18,
-    flexDirection: 'row',
     alignItems: 'center',
   },
 
   icono: {
-    fontSize: 35,
-    marginRight: 15,
-  },
-
-  info: {
-    flex: 1,
+    fontSize: 45,
   },
 
   nombre: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#1F4D2C',
-  },
-
-  descripcion: {
-    fontSize: 13,
-    color: '#55705E',
-    marginTop: 5,
-  },
-
-  precio: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2F7D4A',
     marginTop: 8,
   },
 
-  boton: {
-    backgroundColor: '#2F7D4A',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginLeft: 10,
+  descripcion: {
+    fontSize: 14,
+    color: '#55705E',
+    textAlign: 'center',
+    lineHeight: 21,
+    marginTop: 8,
   },
 
-  botonTexto: {
-    color: '#FFFFFF',
+  precio: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#2F7D4A',
+    marginTop: 12,
   },
 
   regresar: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 5,
     marginBottom: 20,
   },
 
@@ -167,4 +179,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+
 });

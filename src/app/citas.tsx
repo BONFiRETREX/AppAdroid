@@ -15,87 +15,91 @@ import {
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-export default function HomeScreen() {
+export default function CitasScreen() {
+
   const [nombre, setNombre] = useState('');
+  const [telefono, setTelefono] = useState('');
   const [tipoanimal, setTipoanimal] = useState('');
   const [raza, setRaza] = useState('');
   const [peso, setPeso] = useState('');
   const [edad, setEdad] = useState('');
   const [tipoconsulta, setTipoconsulta] = useState('');
+
   const [estado, setEstado] = useState(false);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [procesando, setProcesando] = useState(false);
-  const [resultados, setResultados] = useState('');
-  const [telefono, setTelefono]=useState('');
 
-  // FUNCION DEL BOTON IMPORTANTE PARA EL ESTUDIO
-  const realizarPedidos = () => {
-    // VALIDAMOS QUE TODOS LOS CAMPOS TENGAN INFORMACION
+  const [resultados, setResultados] = useState('');
+
+
+  const enviarFormulario = () => {
+
     if (
       nombre.trim() === '' ||
+      telefono.trim() === '' ||
       tipoanimal.trim() === '' ||
       raza.trim() === '' ||
       peso.trim() === '' ||
       edad.trim() === '' ||
-      tipoconsulta.trim() === ''||
-      telefono.trim()==''
+      tipoconsulta.trim() === ''
     ) {
-      setResultados('Debes completar todos los campos');
-      Alert.alert('Datos incompletos', 'Debes completar todos los campos');
+      Alert.alert(
+        'Campos incompletos',
+        'Por favor completa todos los campos.'
+      );
+
       return;
     }
 
-    // MOSTRAMOS INDICADOR DE CARGA
     setProcesando(true);
-    setResultados('');
 
-    // SIMULACION DEL PROCESO
     setTimeout(() => {
+
       setProcesando(false);
 
       setResultados(
-        `Mascota: ${nombre}
-Tipo de animal: ${tipoanimal}
+        `Paciente: ${nombre}
+Teléfono: ${telefono}
+Animal: ${tipoanimal}
 Raza: ${raza}
 Peso: ${peso} kg
-Edad: ${edad} años
-Tipo de consulta: ${tipoconsulta}
-Estado de la mascota: ${estado ? 'Enferma' : 'Sana'}
-telefono:${telefono}    `
-
+Edad: ${edad}
+Motivo de consulta: ${tipoconsulta}
+Estado de salud: ${estado ? 'Enfermo' : 'Saludable'}`
       );
 
       setModalVisible(true);
+
     }, 1200);
   };
 
+
   return (
     <LinearGradient
-      colors={['#a4fdc2', '#a7d8f1', '#2e87cb']}
+      colors={['#8193e6', '#BFE3C8', '#5C9F71']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      style={styles.pantalla}>
+      style={styles.container}
+    >
+
+      <StatusBar style="dark" />
+
       <KeyboardAvoidingView
-        style={styles.pantalla}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <StatusBar style="dark" />
+        style={styles.keyboard}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
 
         <ScrollView
+          contentContainerStyle={styles.contenido}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.contenido}>
-          <View style={styles.header}>
-            <Text style={styles.logo}>🐾</Text>
+        >
 
-            <Text style={styles.titulo}>Huellitas Veterinaria</Text>
-
-            <Text style={styles.subtitulo}>
-              Cuidamos a tu mascota con amor.
-            </Text>
-          </View>
-
+          {/* IMAGEN */}
           <Image
             source={{
               uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
@@ -103,338 +107,384 @@ telefono:${telefono}    `
             style={styles.imagen}
           />
 
-          <Text style={styles.tituloFormulario}>Agenda una cita</Text>
-
-          <Text style={styles.descripcionFormulario}>
-            Completa los datos de tu mascota.
+          {/* TÍTULO */}
+          <Text style={styles.titulo}>
+            Agendar cita
           </Text>
 
-          <Text style={styles.label}>Nombre de la mascota</Text>
+          <Text style={styles.subtitulo}>
+            Completa los datos de tu mascota
+          </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. Max"
-            placeholderTextColor="#7A7A7A"
-            value={nombre}
-            onChangeText={setNombre}
-          />
 
-          <Text style={styles.label}>Tipo de animal</Text>
+          {/* TARJETA DEL FORMULARIO */}
+          <View style={styles.tarjeta}>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. Perro o gato"
-            placeholderTextColor="#7A7A7A"
-            value={tipoanimal}
-            onChangeText={setTipoanimal}
-          />
+            {/* NOMBRE */}
+            <Text style={styles.label}>
+              Nombre del propietario
+            </Text>
 
-          <Text style={styles.label}>Raza</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingrese su nombre"
+              value={nombre}
+              onChangeText={setNombre}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. Labrador"
-            placeholderTextColor="#7A7A7A"
-            value={raza}
-            onChangeText={setRaza}
-          />
 
-          <Text style={styles.label}>Peso</Text>
+            {/* TELÉFONO */}
+            <Text style={styles.label}>
+              Teléfono
+            </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. 12"
-            placeholderTextColor="#7A7A7A"
-            value={peso}
-            onChangeText={setPeso}
-            keyboardType="numeric"
-          />
+            <TextInput
+              style={styles.input}
+              placeholder="Ingrese su teléfono"
+              value={telefono}
+              onChangeText={setTelefono}
+              keyboardType="phone-pad"
+            />
 
-          <Text style={styles.label}>Edad</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. 3"
-            placeholderTextColor="#7A7A7A"
-            value={edad}
-            onChangeText={setEdad}
-            keyboardType="numeric"
-          />
+            {/* TIPO DE ANIMAL */}
+            <Text style={styles.label}>
+              Tipo de animal
+            </Text>
 
-          <Text style={styles.label}>Tipo de consulta</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ej: Perro, gato..."
+              value={tipoanimal}
+              onChangeText={setTipoanimal}
+            />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Ej. Vacunación o consulta general"
-            placeholderTextColor="#7A7A7A"
-            value={tipoconsulta}
-            onChangeText={setTipoconsulta}
-          />
-            <Text style={styles.label}>Teléfono</Text>
-           <TextInput
-            style={styles.input}
-            placeholder="Ej. Max"
-            placeholderTextColor="#7A7A7A"
-            value={telefono}
-            onChangeText={setTelefono}
-          />
 
-          <View style={styles.filaSwitch}>
-            <View>
-              <Text style={styles.switchTitulo}>¿La mascota está enferma?</Text>
+            {/* RAZA */}
+            <Text style={styles.label}>
+              Raza
+            </Text>
 
-              <Text style={styles.switchDescripcion}>
-                Activa si necesita atención médica.
-              </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Ingrese la raza"
+              value={raza}
+              onChangeText={setRaza}
+            />
+
+
+            {/* PESO */}
+            <Text style={styles.label}>
+              Peso
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Ej: 5"
+              value={peso}
+              onChangeText={setPeso}
+              keyboardType="numeric"
+            />
+
+
+            {/* EDAD */}
+            <Text style={styles.label}>
+              Edad
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Ej: 3 años"
+              value={edad}
+              onChangeText={setEdad}
+            />
+
+
+            {/* MOTIVO DE CONSULTA */}
+            <Text style={styles.label}>
+              Motivo de consulta
+            </Text>
+
+            <TextInput
+              style={[styles.input, styles.inputGrande]}
+              placeholder="Describa el motivo de la consulta"
+              value={tipoconsulta}
+              onChangeText={setTipoconsulta}
+              multiline
+            />
+
+
+            {/* ESTADO DE SALUD */}
+            <View style={styles.filaEstado}>
+
+              <View>
+                <Text style={styles.labelEstado}>
+                  ¿La mascota está enferma?
+                </Text>
+
+                <Text style={styles.estadoTexto}>
+                  {estado ? 'Sí, está enferma' : 'No, está saludable'}
+                </Text>
+              </View>
+
+              <Switch
+                value={estado}
+                onValueChange={setEstado}
+              />
+
             </View>
 
-            <Switch value={estado} onValueChange={setEstado} />
+
+            {/* BOTÓN ENVIAR */}
+            <Pressable
+              style={styles.boton}
+              onPress={enviarFormulario}
+              disabled={procesando}
+            >
+
+              {procesando ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.botonTexto}>
+                  Solicitar cita
+                </Text>
+              )}
+
+            </Pressable>
+
+
+            {/* BOTÓN REGRESAR */}
+            <Pressable
+              style={styles.botonRegresar}
+              onPress={() => router.back()}
+            >
+
+              <Text style={styles.botonRegresarTexto}>
+                Regresar
+              </Text>
+
+            </Pressable>
+
           </View>
 
-          <Pressable style={styles.boton} onPress={realizarPedidos}>
-            <Text style={styles.botonTexto}>Solicitar cita</Text>
-          </Pressable>
-
-          {procesando && (
-            <View style={styles.cargando}>
-              <ActivityIndicator size="large" color="#2F7D4A" />
-
-              <Text style={styles.cargandoTexto}>
-                Registrando cita...
-              </Text>
-            </View>
-          )}
-
-          {resultados !== '' && !procesando && (
-            <View style={styles.resultado}>
-              
-              <Text style={styles.resultadoTitulo}>Resumen de la cita
- 
-
-              </Text>
-
-              <Text style={styles.resultadoTexto}>{resultados}</Text>
-            </View>
-          
-          )}
         </ScrollView>
 
-        <Modal
-          visible={modalVisible}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => setModalVisible(false)}>
-          <View style={styles.modalFondo}>
-            <View style={styles.modalContenido}>
-              <Text style={styles.modalIcono}>🐾</Text>
-
-              <Text style={styles.modalTitulo}>¡Cita solicitada!
-   
-              </Text>
-                                  
-              <Text style={styles.modalTexto}>
-                Gracias. Registramos la cita de {nombre}.
-              </Text>
-
-              <Text style={styles.modalTexto}>
-                Pronto nos comunicaremos contigo.
-              
-              </Text>
-
-
-              <Pressable
-                style={styles.modalBoton}
-                onPress={() => setModalVisible(false)}>
-                <Text style={styles.modalBotonTexto}>Entendido</Text>
-              </Pressable>
-              
-            </View>
-          </View>
-        </Modal>
       </KeyboardAvoidingView>
+
+
+      {/* MODAL DE RESULTADO */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+
+        <View style={styles.fondoModal}>
+
+          <View style={styles.modal}>
+
+            <Image
+              source={{
+                uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
+              }}
+              style={styles.imagenModal}
+            />
+
+            <Text style={styles.tituloModal}>
+              ¡Cita solicitada!
+            </Text>
+
+            <Text style={styles.resultado}>
+              {resultados}
+            </Text>
+
+            <Pressable
+              style={styles.botonModal}
+              onPress={() => setModalVisible(false)}
+            >
+
+              <Text style={styles.botonModalTexto}>
+                Aceptar
+              </Text>
+
+            </Pressable>
+
+          </View>
+
+        </View>
+
+      </Modal>
+
     </LinearGradient>
   );
 }
 
+
 const styles = StyleSheet.create({
-  pantalla: {
+
+  container: {
+    flex: 1,
+  },
+
+  keyboard: {
     flex: 1,
   },
 
   contenido: {
-    padding: 22,
-    paddingTop: 45,
-    paddingBottom: 50,
-  },
-
-  header: {
     alignItems: 'center',
-    marginBottom: 20,
+    paddingBottom: 40,
+    paddingTop: 20,
   },
 
-  logo: {
-    fontSize: 45,
+  imagen: {
+    width: 180,
+    height: 180,
+    marginBottom: 5,
   },
 
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: '#1F4D2C',
+    fontFamily: 'serif',
     textAlign: 'center',
   },
 
   subtitulo: {
-    fontSize: 16,
-    color: '#315C3D',
-    marginTop: 5,
-  },
-
-  imagen: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'contain',
+    fontSize: 17,
+    marginTop: 8,
     marginBottom: 15,
+    fontFamily: 'serif',
+    textAlign: 'center',
   },
 
-  tituloFormulario: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F4D2C',
-    marginBottom: 5,
-  },
-
-  descripcionFormulario: {
-    fontSize: 16,
-    color: '#315C3D',
-    marginBottom: 20,
+  tarjeta: {
+    width: '90%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
   },
 
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1F4D2C',
-    marginBottom: 7,
+    color: '#2F7D4A',
+    marginTop: 10,
+    marginBottom: 6,
   },
 
   input: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 14,
+    borderWidth: 1,
+    borderColor: '#B8D6C1',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 11,
     fontSize: 16,
-    marginBottom: 15,
+    backgroundColor: '#F8FFFA',
   },
 
-  filaSwitch: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 15,
+  inputGrande: {
+    height: 90,
+    textAlignVertical: 'top',
+  },
+
+  filaEstado: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingVertical: 10,
   },
 
-  switchTitulo: {
+  labelEstado: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1F4D2C',
+    color: '#2F7D4A',
   },
 
-  switchDescripcion: {
-    fontSize: 13,
-    color: '#606060',
-    marginTop: 3,
-    width: 220,
+  estadoTexto: {
+    fontSize: 14,
+    marginTop: 4,
+    color: '#555555',
   },
 
   boton: {
     backgroundColor: '#2F7D4A',
+    padding: 15,
     borderRadius: 12,
-    padding: 16,
     alignItems: 'center',
+    marginTop: 20,
   },
 
   botonTexto: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: 'bold',
   },
 
-  cargando: {
-    alignItems: 'center',
-    marginTop: 20,
-  },
-
-  cargandoTexto: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#1F4D2C',
-  },
-
-  resultado: {
-    backgroundColor: '#FFFFFF',
+  botonRegresar: {
+    borderWidth: 1,
+    borderColor: '#2F7D4A',
+    padding: 14,
     borderRadius: 12,
-    padding: 18,
-    marginTop: 20,
+    alignItems: 'center',
+    marginTop: 10,
   },
 
-  resultadoTitulo: {
-    fontSize: 19,
-    fontWeight: 'bold',
-    color: '#1F4D2C',
-    marginBottom: 10,
-  },
-
-  resultadoTexto: {
+  botonRegresarTexto: {
+    color: '#2F7D4A',
     fontSize: 16,
-    lineHeight: 24,
-    color: '#315C3D',
+    fontWeight: 'bold',
   },
 
-  modalFondo: {
+  fondoModal: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
-    padding: 25,
+    alignItems: 'center',
+    padding: 20,
   },
 
-  modalContenido: {
+  modal: {
+    width: '100%',
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 25,
     alignItems: 'center',
   },
 
-  modalIcono: {
-    fontSize: 50,
+  imagenModal: {
+    width: 120,
+    height: 120,
   },
 
-  modalTitulo: {
-    fontSize: 24,
+  tituloModal: {
+    fontSize: 25,
     fontWeight: 'bold',
-    color: '#1F4D2C',
-    marginTop: 10,
+    color: '#2F7D4A',
+    marginTop: 5,
+    marginBottom: 15,
   },
 
-  modalTexto: {
-    fontSize: 16,
-    color: '#315C3D',
+  resultado: {
+    fontSize: 15,
+    lineHeight: 23,
     textAlign: 'center',
-    marginTop: 10,
+    color: '#333333',
   },
 
-  modalBoton: {
+  botonModal: {
     backgroundColor: '#2F7D4A',
-    borderRadius: 12,
     paddingVertical: 13,
-    paddingHorizontal: 35,
-    marginTop: 22,
+    paddingHorizontal: 40,
+    borderRadius: 12,
+    marginTop: 20,
   },
 
-  modalBotonTexto: {
+  botonModalTexto: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 'bold',
   },
-   
+
 });

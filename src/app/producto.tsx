@@ -3,136 +3,174 @@ import {
   Text,
   View,
   Pressable,
-  Image,
+  ScrollView,
 } from 'react-native';
 
 import { router } from 'expo-router';
 
 export default function Producto() {
   return (
-    <View style={styles.container}>
-
-      <Image
-        source={{
-          uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
-        }}
-        style={styles.imagen}
-      />
+    <ScrollView
+      contentContainerStyle={styles.contenido}>
 
       <Text style={styles.titulo}>
-        Consulta veterinaria
+        Productos
       </Text>
 
-      <Text style={styles.descripcion}>
-        Realizamos una revisión general de tu mascota,
-        evaluando su estado de salud y proporcionando
-        recomendaciones para su cuidado.
+      <Text style={styles.subtitulo}>
+        Productos disponibles para el cuidado de tu mascota.
       </Text>
 
+
+      {/* PRODUCTO 1 */}
       <View style={styles.tarjeta}>
 
-        <Text style={styles.label}>Servicio</Text>
-        <Text style={styles.valor}>Consulta general</Text>
+        <Text style={styles.icono}>
+          🦴
+        </Text>
 
-        <Text style={styles.label}>Precio</Text>
-        <Text style={styles.valor}>$50.000</Text>
+        <Text style={styles.nombre}>
+          Alimento para mascotas
+        </Text>
 
-        <Text style={styles.label}>Duración</Text>
-        <Text style={styles.valor}>30 minutos</Text>
+        <Text style={styles.descripcion}>
+          Alimento balanceado para perros y gatos.
+        </Text>
+
+        <Text style={styles.precio}>
+          $45.000
+        </Text>
 
       </View>
 
-      <Pressable
-        style={styles.boton}
-        onPress={() => router.push('/citas')}>
-        <Text style={styles.botonTexto}>
-          Agendar cita
-        </Text>
-      </Pressable>
 
+      {/* PRODUCTO 2 */}
+      <View style={styles.tarjeta}>
+
+        <Text style={styles.icono}>
+          🧴
+        </Text>
+
+        <Text style={styles.nombre}>
+          Shampoo veterinario
+        </Text>
+
+        <Text style={styles.descripcion}>
+          Shampoo especial para el cuidado del pelaje.
+        </Text>
+
+        <Text style={styles.precio}>
+          $25.000
+        </Text>
+
+      </View>
+
+
+      {/* PRODUCTO 3 */}
+      <View style={styles.tarjeta}>
+
+        <Text style={styles.icono}>
+          🐶
+        </Text>
+
+        <Text style={styles.nombre}>
+          Collar para mascota
+        </Text>
+
+        <Text style={styles.descripcion}>
+          Collar cómodo y resistente para perros y gatos.
+        </Text>
+
+        <Text style={styles.precio}>
+          $20.000
+        </Text>
+
+      </View>
+
+
+      {/* REGRESAR */}
       <Pressable
         style={styles.regresar}
         onPress={() => router.back()}>
+
         <Text style={styles.regresarTexto}>
           Regresar
         </Text>
+
       </Pressable>
 
-    </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E8F8EE',
-    justifyContent: 'center',
-    padding: 22,
-  },
 
-  imagen: {
-    width: '100%',
-    height: 190,
-    resizeMode: 'contain',
+const styles = StyleSheet.create({
+
+  contenido: {
+    flexGrow: 1,
+    padding: 22,
+    backgroundColor: '#E8F8EE',
   },
 
   titulo: {
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: 'bold',
     color: '#1F4D2C',
     textAlign: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
 
-  descripcion: {
+  subtitulo: {
     fontSize: 16,
     color: '#315C3D',
     textAlign: 'center',
-    lineHeight: 24,
-    marginTop: 12,
+    marginTop: 8,
+    marginBottom: 25,
   },
 
   tarjeta: {
     backgroundColor: '#FFFFFF',
     borderRadius: 18,
     padding: 20,
-    marginTop: 20,
+    marginBottom: 18,
+    alignItems: 'center',
   },
 
-  label: {
-    fontSize: 13,
-    color: '#6C806F',
+  icono: {
+    fontSize: 45,
+  },
+
+  nombre: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: '#1F4D2C',
     marginTop: 8,
   },
 
-  valor: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#1F4D2C',
-    marginTop: 3,
+  descripcion: {
+    fontSize: 14,
+    color: '#55705E',
+    textAlign: 'center',
+    marginTop: 6,
   },
 
-  boton: {
-    backgroundColor: '#2F7D4A',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-
-  botonTexto: {
-    color: '#FFFFFF',
+  precio: {
     fontSize: 17,
     fontWeight: 'bold',
+    color: '#2F7D4A',
+    marginTop: 10,
   },
 
   regresar: {
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 5,
+    marginBottom: 20,
   },
 
   regresarTexto: {
     color: '#2F7D4A',
     fontWeight: 'bold',
+    fontSize: 16,
   },
+
 });
