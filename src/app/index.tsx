@@ -65,7 +65,22 @@ export default function HomeScreen() {
           />
 
           <Text style={styles.tituloFormulario}>
-            Formulario
+            Registrar cliente
+          </Text>
+
+        </Pressable>
+
+        <Pressable
+          style={styles.tarjetaHistorial}
+          onPress={() => router.push('./registros')}
+        >
+
+          <Text style={styles.iconoHistorial}>
+            Historial
+          </Text>
+
+          <Text style={styles.tituloHistorial}>
+            Ver clientes registrados
           </Text>
 
         </Pressable>
@@ -88,7 +103,7 @@ export default function HomeScreen() {
             </Text>
 
             <Text style={styles.tituloTarjeta}>
-              Citas
+              Clientes
             </Text>
 
           </Pressable>
@@ -225,6 +240,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 15,
+  },
+
+  tarjetaHistorial: {
+    width: 300,
+    backgroundColor: '#EAF7EE',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    paddingVertical: 14,
+  },
+
+  iconoHistorial: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2F7D4A',
+    fontFamily: 'serif',
+  },
+
+  tituloHistorial: {
+    fontSize: 15,
+    color: '#2F7D4A',
+    marginTop: 3,
   },
 
   imagenFormulario: {

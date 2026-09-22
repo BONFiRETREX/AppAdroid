@@ -1,490 +1,197 @@
+import { useState } from 'react';
 import {
-  StyleSheet,
-  Text,
-  Image,
-  Pressable,
-  Alert,
-  View,
   ActivityIndicator,
+  Alert,
+  Image,
   KeyboardAvoidingView,
-  Modal,
   Platform,
+  Pressable,
   ScrollView,
+  StyleSheet,
   Switch,
+  Text,
   TextInput,
+  View,
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-export default function CitasScreen() {
+import { supabase } from '../../lib/supabase';
 
+export default function CitasScreen() {
   const [nombre, setNombre] = useState('');
+  const [correo, setCorreo] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [tipoanimal, setTipoanimal] = useState('');
+  const [tipoAnimal, setTipoAnimal] = useState('');
   const [raza, setRaza] = useState('');
   const [peso, setPeso] = useState('');
   const [edad, setEdad] = useState('');
-  const [tipoconsulta, setTipoconsulta] = useState('');
+  const [motivoConsulta, setMotivoConsulta] = useState('');
+  const [mascotaEnferma, setMascotaEnferma] = useState(false);
+  const [guardando, setGuardando] = useState(false);
 
-  const [estado, setEstado] = useState(false);
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [procesando, setProcesando] = useState(false);
-
-  const [resultados, setResultados] = useState('');
-
-
-  const enviarFormulario = () => {
-
+  const guardarCita = async () => {
     if (
-      nombre.trim() === '' ||
-      telefono.trim() === '' ||
-      tipoanimal.trim() === '' ||
-      raza.trim() === '' ||
-      peso.trim() === '' ||
-      edad.trim() === '' ||
-      tipoconsulta.trim() === ''
+      !nombre.trim() ||
+      !correo.trim() ||
+      !telefono.trim() ||
+      !tipoAnimal.trim() ||
+      !raza.trim() ||
+      !peso.trim() ||
+      !edad.trim() ||
+      !motivoConsulta.trim()
     ) {
-      Alert.alert(
-        'Campos incompletos',
-        'Por favor completa todos los campos.'
-      );
-
+      Alert.alert('Campos incompletos', 'Por favor completa todos los campos.');
       return;
     }
 
-    setProcesando(true);
+    const pesoKg = Number(peso.replace(',', '.'));
+    if (!Number.isFinite(pesoKg) || pesoKg <= 0) {
+      Alert.alert('Peso inválido', 'Ingresa un peso mayor que cero, por ejemplo: 5.5');
+      return;
+    }
 
-    setTimeout(() => {
+    try {
+      setGuardando(true);
+      const { data: cliente, error } = await supabase
+        .from('clientes_veterinaria')
+        .insert({
+          nombre: nombre.trim(),
+          correo: correo.trim(),
+          telefono: telefono.trim(),
+          tipo_animal: tipoAnimal.trim(),
+          raza: raza.trim(),
+          peso_kg: pesoKg,
+          edad: edad.trim(),
+          motivo_consulta: motivoConsulta.trim(),
+          mascota_enferma: mascotaEnferma,
+        })
+        .select()
+        .single();
 
-      setProcesando(false);
+      if (error || !cliente) {
+        Alert.alert('No se pudo guardar', error?.message ?? 'No se recibió el cliente creado.');
+        return;
+      }
 
-      setResultados(
-        `Paciente: ${nombre}
-Teléfono: ${telefono}
-Animal: ${tipoanimal}
-Raza: ${raza}
-Peso: ${peso} kg
-Edad: ${edad}
-Motivo de consulta: ${tipoconsulta}
-Estado de salud: ${estado ? 'Enfermo' : 'Saludable'}`
-      );
-
-      setModalVisible(true);
-
-    }, 1200);
+      router.push({
+        pathname: './resultado',
+        params: {
+          id: String(cliente.id),
+          nombre: cliente.nombre,
+          correo: cliente.correo,
+          telefono: cliente.telefono,
+          tipoAnimal: cliente.tipo_animal,
+          raza: cliente.raza,
+          pesoKg: String(cliente.peso_kg),
+          edad: cliente.edad,
+          motivoConsulta: cliente.motivo_consulta,
+          mascotaEnferma: String(cliente.mascota_enferma),
+        },
+      });
+    } catch {
+      Alert.alert('Error de conexión', 'No fue posible guardar el cliente. Inténtalo de nuevo.');
+    } finally {
+      setGuardando(false);
+    }
   };
-
 
   return (
     <LinearGradient
       colors={['#8193e6', '#BFE3C8', '#5C9F71']}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 1 }}
-      style={styles.container}
-    >
-
+      style={styles.container}>
       <StatusBar style="dark" />
-
       <KeyboardAvoidingView
         style={styles.keyboard}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-
-        <ScrollView
-          contentContainerStyle={styles.contenido}
-          showsVerticalScrollIndicator={false}
-        >
-
-          {/* IMAGEN */}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerStyle={styles.contenido} showsVerticalScrollIndicator={false}>
           <Image
             source={{
               uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
             }}
             style={styles.imagen}
           />
+          <Text style={styles.titulo}>Registrar cliente</Text>
+          <Text style={styles.subtitulo}>Completa los datos del propietario y su mascota</Text>
 
-          {/* TÍTULO */}
-          <Text style={styles.titulo}>
-            Agendar cita
-          </Text>
-
-          <Text style={styles.subtitulo}>
-            Completa los datos de tu mascota
-          </Text>
-
-
-          {/* TARJETA DEL FORMULARIO */}
           <View style={styles.tarjeta}>
+            <Campo etiqueta="Nombre del propietario" placeholder="Ingresa tu nombre" value={nombre} onChangeText={setNombre} />
+            <Campo etiqueta="Correo electrónico" placeholder="correo@ejemplo.com" value={correo} onChangeText={setCorreo} keyboardType="email-address" />
+            <Campo etiqueta="Teléfono" placeholder="Ingresa tu teléfono" value={telefono} onChangeText={setTelefono} keyboardType="phone-pad" />
+            <Campo etiqueta="Tipo de animal" placeholder="Ej.: perro o gato" value={tipoAnimal} onChangeText={setTipoAnimal} />
+            <Campo etiqueta="Raza" placeholder="Ingresa la raza" value={raza} onChangeText={setRaza} />
+            <Campo etiqueta="Peso en kg" placeholder="Ej.: 5.5" value={peso} onChangeText={setPeso} keyboardType="decimal-pad" />
+            <Campo etiqueta="Edad" placeholder="Ej.: 3 años" value={edad} onChangeText={setEdad} />
+            <Campo etiqueta="Motivo de consulta" placeholder="Describe el motivo de la consulta" value={motivoConsulta} onChangeText={setMotivoConsulta} multiline />
 
-            {/* NOMBRE */}
-            <Text style={styles.label}>
-              Nombre del propietario
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ingrese su nombre"
-              value={nombre}
-              onChangeText={setNombre}
-            />
-
-
-            {/* TELÉFONO */}
-            <Text style={styles.label}>
-              Teléfono
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ingrese su teléfono"
-              value={telefono}
-              onChangeText={setTelefono}
-              keyboardType="phone-pad"
-            />
-
-
-            {/* TIPO DE ANIMAL */}
-            <Text style={styles.label}>
-              Tipo de animal
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ej: Perro, gato..."
-              value={tipoanimal}
-              onChangeText={setTipoanimal}
-            />
-
-
-            {/* RAZA */}
-            <Text style={styles.label}>
-              Raza
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ingrese la raza"
-              value={raza}
-              onChangeText={setRaza}
-            />
-
-
-            {/* PESO */}
-            <Text style={styles.label}>
-              Peso
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ej: 5"
-              value={peso}
-              onChangeText={setPeso}
-              keyboardType="numeric"
-            />
-
-
-            {/* EDAD */}
-            <Text style={styles.label}>
-              Edad
-            </Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Ej: 3 años"
-              value={edad}
-              onChangeText={setEdad}
-            />
-
-
-            {/* MOTIVO DE CONSULTA */}
-            <Text style={styles.label}>
-              Motivo de consulta
-            </Text>
-
-            <TextInput
-              style={[styles.input, styles.inputGrande]}
-              placeholder="Describa el motivo de la consulta"
-              value={tipoconsulta}
-              onChangeText={setTipoconsulta}
-              multiline
-            />
-
-
-            {/* ESTADO DE SALUD */}
             <View style={styles.filaEstado}>
-
-              <View>
-                <Text style={styles.labelEstado}>
-                  ¿La mascota está enferma?
-                </Text>
-
-                <Text style={styles.estadoTexto}>
-                  {estado ? 'Sí, está enferma' : 'No, está saludable'}
-                </Text>
+              <View style={styles.estadoContenido}>
+                <Text style={styles.labelEstado}>¿La mascota está enferma?</Text>
+                <Text style={styles.estadoTexto}>{mascotaEnferma ? 'Sí, está enferma' : 'No, está saludable'}</Text>
               </View>
-
-              <Switch
-                value={estado}
-                onValueChange={setEstado}
-              />
-
+              <Switch value={mascotaEnferma} onValueChange={setMascotaEnferma} />
             </View>
 
-
-            {/* BOTÓN ENVIAR */}
-            <Pressable
-              style={styles.boton}
-              onPress={enviarFormulario}
-              disabled={procesando}
-            >
-
-              {procesando ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Text style={styles.botonTexto}>
-                  Solicitar cita
-                </Text>
-              )}
-
+            <Pressable style={[styles.boton, guardando && styles.botonDeshabilitado]} onPress={guardarCita} disabled={guardando}>
+              {guardando ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.botonTexto}>Guardar cliente</Text>}
             </Pressable>
-
-
-            {/* BOTÓN REGRESAR */}
-            <Pressable
-              style={styles.botonRegresar}
-              onPress={() => router.back()}
-            >
-
-              <Text style={styles.botonRegresarTexto}>
-                Regresar
-              </Text>
-
+            <Pressable style={styles.botonRegresar} onPress={() => router.back()}>
+              <Text style={styles.botonRegresarTexto}>Regresar</Text>
             </Pressable>
-
           </View>
-
         </ScrollView>
-
       </KeyboardAvoidingView>
-
-
-      {/* MODAL DE RESULTADO */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-
-        <View style={styles.fondoModal}>
-
-          <View style={styles.modal}>
-
-            <Image
-              source={{
-                uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
-              }}
-              style={styles.imagenModal}
-            />
-
-            <Text style={styles.tituloModal}>
-              ¡Cita solicitada!
-            </Text>
-
-            <Text style={styles.resultado}>
-              {resultados}
-            </Text>
-
-            <Pressable
-              style={styles.botonModal}
-              onPress={() => setModalVisible(false)}
-            >
-
-              <Text style={styles.botonModalTexto}>
-                Aceptar
-              </Text>
-
-            </Pressable>
-
-          </View>
-
-        </View>
-
-      </Modal>
-
     </LinearGradient>
   );
 }
 
+type CampoProps = {
+  etiqueta: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (texto: string) => void;
+  keyboardType?: 'default' | 'decimal-pad' | 'email-address' | 'phone-pad';
+  multiline?: boolean;
+};
+
+function Campo({ etiqueta, placeholder, value, onChangeText, keyboardType, multiline }: CampoProps) {
+  return (
+    <View>
+      <Text style={styles.label}>{etiqueta}</Text>
+      <TextInput
+        style={[styles.input, multiline && styles.inputGrande]}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        multiline={multiline}
+      />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-  },
-
-  keyboard: {
-    flex: 1,
-  },
-
-  contenido: {
-    alignItems: 'center',
-    paddingBottom: 40,
-    paddingTop: 20,
-  },
-
-  imagen: {
-    width: 180,
-    height: 180,
-    marginBottom: 5,
-  },
-
-  titulo: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    fontFamily: 'serif',
-    textAlign: 'center',
-  },
-
-  subtitulo: {
-    fontSize: 17,
-    marginTop: 8,
-    marginBottom: 15,
-    fontFamily: 'serif',
-    textAlign: 'center',
-  },
-
-  tarjeta: {
-    width: '90%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-  },
-
-  label: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2F7D4A',
-    marginTop: 10,
-    marginBottom: 6,
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: '#B8D6C1',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 11,
-    fontSize: 16,
-    backgroundColor: '#F8FFFA',
-  },
-
-  inputGrande: {
-    height: 90,
-    textAlignVertical: 'top',
-  },
-
-  filaEstado: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 20,
-    paddingVertical: 10,
-  },
-
-  labelEstado: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#2F7D4A',
-  },
-
-  estadoTexto: {
-    fontSize: 14,
-    marginTop: 4,
-    color: '#555555',
-  },
-
-  boton: {
-    backgroundColor: '#2F7D4A',
-    padding: 15,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-
-  botonTexto: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
-
-  botonRegresar: {
-    borderWidth: 1,
-    borderColor: '#2F7D4A',
-    padding: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-
-  botonRegresarTexto: {
-    color: '#2F7D4A',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
-  fondoModal: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-
-  modal: {
-    width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 25,
-    alignItems: 'center',
-  },
-
-  imagenModal: {
-    width: 120,
-    height: 120,
-  },
-
-  tituloModal: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: '#2F7D4A',
-    marginTop: 5,
-    marginBottom: 15,
-  },
-
-  resultado: {
-    fontSize: 15,
-    lineHeight: 23,
-    textAlign: 'center',
-    color: '#333333',
-  },
-
-  botonModal: {
-    backgroundColor: '#2F7D4A',
-    paddingVertical: 13,
-    paddingHorizontal: 40,
-    borderRadius: 12,
-    marginTop: 20,
-  },
-
-  botonModalTexto: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-
+  container: { flex: 1 },
+  keyboard: { flex: 1 },
+  contenido: { alignItems: 'center', paddingTop: 20, paddingBottom: 40 },
+  imagen: { width: 180, height: 180, marginBottom: 5 },
+  titulo: { fontSize: 30, fontWeight: 'bold', fontFamily: 'serif', textAlign: 'center' },
+  subtitulo: { fontSize: 17, marginTop: 8, marginBottom: 15, fontFamily: 'serif', textAlign: 'center' },
+  tarjeta: { width: '90%', backgroundColor: '#FFFFFF', borderRadius: 20, padding: 20 },
+  label: { fontSize: 16, fontWeight: 'bold', color: '#2F7D4A', marginTop: 10, marginBottom: 6 },
+  input: { borderWidth: 1, borderColor: '#B8D6C1', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 11, fontSize: 16, backgroundColor: '#F8FFFA' },
+  inputGrande: { height: 90, textAlignVertical: 'top' },
+  filaEstado: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 20, paddingVertical: 10 },
+  estadoContenido: { flex: 1, paddingRight: 12 },
+  labelEstado: { fontSize: 16, fontWeight: 'bold', color: '#2F7D4A' },
+  estadoTexto: { fontSize: 14, marginTop: 4, color: '#555555' },
+  boton: { backgroundColor: '#2F7D4A', padding: 15, borderRadius: 12, alignItems: 'center', marginTop: 20 },
+  botonDeshabilitado: { opacity: 0.7 },
+  botonTexto: { color: '#FFFFFF', fontSize: 17, fontWeight: 'bold' },
+  botonRegresar: { borderWidth: 1, borderColor: '#2F7D4A', padding: 14, borderRadius: 12, alignItems: 'center', marginTop: 10 },
+  botonRegresarTexto: { color: '#2F7D4A', fontSize: 16, fontWeight: 'bold' },
 });

@@ -25,11 +25,25 @@ export default function RootLayout() {
           }}
         />
 
-        {/* Citas */}
+        {/* Registro de clientes */}
         <Stack.Screen
           name="citas"
           options={{
-            title: 'Agendar cita',
+            title: 'Registrar cliente',
+          }}
+        />
+
+        <Stack.Screen
+          name="resultado"
+          options={{
+            title: 'Cliente registrado',
+          }}
+        />
+
+        <Stack.Screen
+          name="registros"
+          options={{
+            title: 'Clientes registrados',
           }}
         />
 
