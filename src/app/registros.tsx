@@ -13,6 +13,7 @@ type ClienteVeterinaria = {
   peso_kg: number;
   edad: string;
   motivo_consulta: string;
+  tipo_atencion: string;
   mascota_enferma: boolean;
 };
 
@@ -92,6 +93,7 @@ function TarjetaCliente({ cliente }: { cliente: ClienteVeterinaria }) {
       <Text style={styles.detalle}>{cliente.tipo_animal} · {cliente.raza}</Text>
       <Text style={styles.detalle}>Peso: {cliente.peso_kg} kg · Edad: {cliente.edad}</Text>
       <Text style={styles.detalle}>Teléfono: {cliente.telefono}</Text>
+      <Text style={styles.atencion}>Atención: {cliente.tipo_atencion}</Text>
       <Text style={styles.motivo}>Motivo: {cliente.motivo_consulta}</Text>
     </View>
   );
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
   saludable: { color: '#166534', backgroundColor: '#DCFCE7' },
   enferma: { color: '#991B1B', backgroundColor: '#FEE2E2' },
   detalle: { color: '#374151', fontSize: 15, marginTop: 7 },
+  atencion: { color: '#2F7D4A', fontSize: 15, fontWeight: '700', marginTop: 9 },
   motivo: { color: '#1F2937', fontSize: 15, marginTop: 9, fontStyle: 'italic' },
   centro: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   mensaje: { color: '#4B5563', fontSize: 16, textAlign: 'center', marginTop: 12 },

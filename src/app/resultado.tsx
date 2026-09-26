@@ -12,6 +12,7 @@ type ResultadoParams = {
   pesoKg?: string | string[];
   edad?: string | string[];
   motivoConsulta?: string | string[];
+  tipoAtencion?: string | string[];
   mascotaEnferma?: string | string[];
 };
 
@@ -37,6 +38,7 @@ export default function ResultadoScreen() {
         <Dato etiqueta="Peso" valor={`${texto(params.pesoKg)} kg`} />
         <Dato etiqueta="Edad" valor={texto(params.edad)} />
         <Dato etiqueta="Motivo" valor={texto(params.motivoConsulta)} />
+        <Dato etiqueta="Tipo de atención" valor={texto(params.tipoAtencion)} />
         <Dato etiqueta="Estado" valor={mascotaEnferma ? 'Enferma' : 'Saludable'} />
       </View>
       <Pressable style={styles.boton} onPress={() => router.push('./registros')}>

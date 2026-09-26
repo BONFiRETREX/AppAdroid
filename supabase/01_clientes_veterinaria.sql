@@ -11,9 +11,29 @@ create table if not exists public.clientes_veterinaria (
   peso_kg numeric(6, 2) not null check (peso_kg > 0),
   edad text not null,
   motivo_consulta text not null,
+  tipo_atencion text not null,
   mascota_enferma boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+-- Si la tabla ya fue creada en una entrega anterior, agrega el nuevo campo
+-- sin perder los clientes registrados y marca sus atenciones como generales.
+alter table public.clientes_veterinaria
+  add column if not exists tipo_atencion text;
+
+update public.clientes_veterinaria
+set tipo_atencion = 'Consulta general'
+where tipo_atencion is null or btrim(tipo_atencion) = '';
+
+alter table public.clientes_veterinaria
+  alter column tipo_atencion set not null;
+
+alter table public.clientes_veterinaria
+  drop constraint if exists clientes_veterinaria_tipo_atencion_valido;
+
+alter table public.clientes_veterinaria
+  add constraint clientes_veterinaria_tipo_atencion_valido
+  check (btrim(tipo_atencion) <> '');
 
 -- Restricciones: solo se permite consultar e insertar desde la app.
 alter table public.clientes_veterinaria enable row level security;
