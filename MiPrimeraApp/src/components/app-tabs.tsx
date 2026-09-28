@@ -9,21 +9,32 @@ export default function AppTabs() {
 
   return (
     <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}>
+      backgroundColor="#FFFFFF"
+      indicatorColor="#EEEEEE"
+      labelStyle={{
+        selected: {
+          color: colors.text,
+        },
+      }}
+    >
       <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>inicio</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>
+          inicio
+        </NativeTabs.Trigger.Label>
+
         <NativeTabs.Trigger.Icon
-  src={require('@/assets/images/tabIcons/paw.png')}
-  renderingMode="template"
-/>
+          src={require('@/assets/images/tabIcons/paw.png')}
+          renderingMode="template"
+        />
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="explore">
-        <NativeTabs.Trigger.Label>Explorar</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="citas">
+        <NativeTabs.Trigger.Label>
+          Citas
+        </NativeTabs.Trigger.Label>
+
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
+          src={require('@/assets/images/tabIcons/Formularios.png')}
           renderingMode="template"
         />
       </NativeTabs.Trigger>

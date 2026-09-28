@@ -1,81 +1,341 @@
-import { StyleSheet, View, Text, Image, Pressable,Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Image,
+  Pressable,
+  View,
+  ScrollView,
+} from 'react-native';
+
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={['#8193e6', '#BFE3C8', '#5C9F71']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.container}
+    >
 
-      <Image
-        source={{
-          uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png'
-        }}
-        style={styles.imagenVeterinaria}
-      />
+      <ScrollView
+        contentContainerStyle={styles.contenido}
+        showsVerticalScrollIndicator={false}
+      >
 
-      <Text style={styles.titulo}>
-        Huellitas Veterinaria
-      </Text>
+        {/* IMAGEN PRINCIPAL */}
+        <Image
+          source={{
+            uri: 'https://png.pngtree.com/png-clipart/20230927/original/pngtree-veterinarian-character-illustration-png-image_13144784.png',
+          }}
+          style={styles.imagenVeterinaria}
+        />
 
-      <Text style={styles.texto}>
-         Duban Giron Vt. 
-      </Text>
+        {/* TÍTULO */}
+        <Text style={styles.titulo}>
+          Huellitas Veterinaria
+        </Text>
 
-      <Text style={styles.texto}>
-        Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.
-      </Text>
+        {/* NOMBRE */}
+        <Text style={styles.texto}>
+          Duban Giron Vt.
+        </Text>
 
-      <Text style={styles.mensaje}>
-        
-      </Text>
+        {/* DESCRIPCIÓN */}
+        <Text style={styles.texto}>
+          Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.
+        </Text>
 
-      <Pressable onPress={() => Alert.alert('Agenda tu cita',
-      'Comunícate con nuestra veterinaria para elegir el día y la hora de atención para tu mascota.')}>
-  <Image
-        source={{
-          uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png'
-        }}
-        style={styles.imagenBotonInfo}
-      />
-</Pressable>
 
-    </View>
+        {/* ========================= */}
+        {/* FORMULARIO */}
+        {/* ========================= */}
+
+        <Pressable
+          style={styles.tarjetaFormulario}
+          onPress={() => router.push('/citas')}
+        >
+
+          <Image
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/512/403/403890.png',
+            }}
+            style={styles.imagenFormulario}
+          />
+
+          <Text style={styles.tituloFormulario}>
+            Registrar cliente
+          </Text>
+
+        </Pressable>
+
+        <Pressable
+          style={styles.tarjetaHistorial}
+          onPress={() => router.push('./registros')}
+        >
+
+          <Text style={styles.iconoHistorial}>
+            Historial
+          </Text>
+
+          <Text style={styles.tituloHistorial}>
+            Ver clientes registrados
+          </Text>
+
+        </Pressable>
+
+
+        {/* ========================= */}
+        {/* 4 OPCIONES EN UNA LÍNEA */}
+        {/* ========================= */}
+
+        <View style={styles.filaBotones}>
+
+          {/* CITAS */}
+          <Pressable
+            style={styles.tarjetaPequena}
+            onPress={() => router.push('/citas')}
+          >
+
+            <Text style={styles.icono}>
+              📋
+            </Text>
+
+            <Text style={styles.tituloTarjeta}>
+              Clientes
+            </Text>
+
+          </Pressable>
+
+
+          {/* CONTACTO */}
+          <Pressable
+            style={styles.tarjetaPequena}
+            onPress={() => router.push('/contacto')}
+          >
+
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/512/751/751381.png',
+              }}
+              style={styles.imagenPequena}
+            />
+
+            <Text style={styles.tituloTarjeta}>
+              Contacto
+            </Text>
+
+          </Pressable>
+
+
+          {/* PRODUCTOS */}
+          <Pressable
+            style={styles.tarjetaPequena}
+            onPress={() => router.push('/producto')}
+          >
+
+            <Text style={styles.icono}>
+              🛒
+            </Text>
+
+            <Text style={styles.tituloTarjeta}>
+              Productos
+            </Text>
+
+          </Pressable>
+
+
+          {/* SERVICIOS */}
+          <Pressable
+            style={styles.tarjetaPequena}
+            onPress={() => router.push('/servicios')}
+          >
+
+            <Text style={styles.icono}>
+              🐾
+            </Text>
+
+            <Text style={styles.tituloTarjeta}>
+              Servicios
+            </Text>
+
+          </Pressable>
+
+        </View>
+
+      </ScrollView>
+
+    </LinearGradient>
   );
 }
 
+
 const styles = StyleSheet.create({
+
+  /* ========================= */
+  /* CONTENEDOR */
+  /* ========================= */
+
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#DDF3E4', // verde claro pastel
   },
 
+
+  /* ========================= */
+  /* CONTENIDO */
+  /* ========================= */
+
+  contenido: {
+    alignItems: 'center',
+    paddingBottom: 30,
+  },
+
+
+  /* ========================= */
+  /* IMAGEN PRINCIPAL */
+  /* ========================= */
+
   imagenVeterinaria: {
-    width: 412,
-    height: 410,
-    marginTop: -130,
+    width: 312,
+    height: 310,
+    marginTop: -20,
   },
-  imagenBotonInfo: {
-    width: 100,
-    height: 100,
-    marginTop: 10,
-  },
+
+
+  /* ========================= */
+  /* TÍTULO */
+  /* ========================= */
 
   titulo: {
     fontSize: 30,
     fontWeight: 'bold',
     fontFamily: 'serif',
+    textAlign: 'center',
   },
+
+
+  /* ========================= */
+  /* TEXTOS */
+  /* ========================= */
 
   texto: {
     fontSize: 18,
     marginTop: 10,
     fontFamily: 'serif',
+    textAlign: 'center',
+    paddingHorizontal: 25,
   },
 
-  mensaje: {
+
+  /* ========================= */
+  /* FORMULARIO */
+  /* ========================= */
+
+  tarjetaFormulario: {
+    width: 300,
+    height: 100,
+    backgroundColor: '#d6fafd',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+  },
+
+  tarjetaHistorial: {
+    width: 300,
+    backgroundColor: '#EAF7EE',
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    paddingVertical: 14,
+  },
+
+  iconoHistorial: {
     fontSize: 18,
-    marginTop: 30,
+    fontWeight: 'bold',
+    color: '#2F7D4A',
     fontFamily: 'serif',
   },
- 
+
+  tituloHistorial: {
+    fontSize: 15,
+    color: '#2F7D4A',
+    marginTop: 3,
+  },
+
+  imagenFormulario: {
+    width: 65,
+    height: 65,
+  },
+
+  tituloFormulario: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2F7D4A',
+    marginTop: 3,
+    fontFamily: 'serif',
+  },
+
+
+  /* ========================= */
+  /* 4 TARJETAS EN UNA LÍNEA */
+  /* ========================= */
+
+  filaBotones: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 7,
+    marginTop: 15,
+  },
+
+
+  /* ========================= */
+  /* TARJETAS PEQUEÑAS */
+  /* ========================= */
+
+  tarjetaPequena: {
+    width: 82,
+    height: 96,
+    backgroundColor: '#d6eaec',
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+
+  /* ========================= */
+  /* IMAGEN CONTACTO */
+  /* ========================= */
+
+  imagenPequena: {
+    width: 42,
+    height: 42,
+  },
+
+
+  /* ========================= */
+  /* ICONOS */
+  /* ========================= */
+
+  icono: {
+    fontSize: 38,
+  },
+
+
+  /* ========================= */
+  /* TÍTULOS TARJETAS */
+  /* ========================= */
+
+  tituloTarjeta: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    fontFamily: 'serif',
+    color: '#2F7D4A',
+    marginTop: 3,
+    textAlign: 'center',
+  },
+
 });
