@@ -1,5 +1,5 @@
--- Huellitas Veterinaria · registro de clientes y sus mascotas.
--- Ejecuta este archivo una vez en Supabase Dashboard > SQL Editor > New query.
+-- Huellitas Veterinaria: tabla de clientes y mascotas.
+-- Para una base nueva, ejecuta este archivo en Supabase > SQL Editor > New query.
 
 create table if not exists public.clientes_veterinaria (
   id bigint generated always as identity primary key,
@@ -16,8 +16,7 @@ create table if not exists public.clientes_veterinaria (
   created_at timestamptz not null default now()
 );
 
--- Si la tabla ya fue creada en una entrega anterior, agrega el nuevo campo
--- sin perder los clientes registrados y marca sus atenciones como generales.
+-- Migración segura para tablas creadas antes del campo tipo_atencion.
 alter table public.clientes_veterinaria
   add column if not exists tipo_atencion text;
 
@@ -35,30 +34,33 @@ alter table public.clientes_veterinaria
   add constraint clientes_veterinaria_tipo_atencion_valido
   check (btrim(tipo_atencion) <> '');
 
--- Restricciones: solo se permite consultar e insertar desde la app.
+-- Seguridad: la tabla no queda disponible para visitantes anonimos.
 alter table public.clientes_veterinaria enable row level security;
 
 revoke all on table public.clientes_veterinaria from anon, authenticated;
-grant usage on schema public to anon;
-grant select, insert on table public.clientes_veterinaria to anon;
-grant usage on sequence public.clientes_veterinaria_id_seq to anon;
+grant usage on schema public to authenticated;
+grant select, insert on table public.clientes_veterinaria to authenticated;
+grant usage, select on sequence public.clientes_veterinaria_id_seq to authenticated;
 
+-- Elimina las politicas antiguas de la app sin login y crea las nuevas.
 drop policy if exists "permitir insertar clientes" on public.clientes_veterinaria;
 drop policy if exists "permitir consultar clientes" on public.clientes_veterinaria;
+drop policy if exists "usuarios autenticados insertan clientes" on public.clientes_veterinaria;
+drop policy if exists "usuarios autenticados consultan clientes" on public.clientes_veterinaria;
 
-create policy "permitir insertar clientes"
+create policy "usuarios autenticados insertan clientes"
 on public.clientes_veterinaria
 for insert
-to anon
+to authenticated
 with check (true);
 
-create policy "permitir consultar clientes"
+create policy "usuarios autenticados consultan clientes"
 on public.clientes_veterinaria
 for select
-to anon
+to authenticated
 using (true);
 
--- Verificación: inicialmente puede devolver cero filas.
+-- Verificación: se debe ejecutar con una cuenta autenticada en la app.
 select *
 from public.clientes_veterinaria
 order by id desc;

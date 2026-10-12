@@ -41,10 +41,10 @@ export default function ResultadoScreen() {
         <Dato etiqueta="Tipo de atención" valor={texto(params.tipoAtencion)} />
         <Dato etiqueta="Estado" valor={mascotaEnferma ? 'Enferma' : 'Saludable'} />
       </View>
-      <Pressable style={styles.boton} onPress={() => router.push('./registros')}>
+      <Pressable style={styles.boton} onPress={() => router.push('/app/registros')}>
         <Text style={styles.botonTexto}>Ver clientes registrados</Text>
       </Pressable>
-      <Pressable style={styles.botonSecundario} onPress={() => router.replace('./citas')}>
+      <Pressable style={styles.botonSecundario} onPress={() => router.replace('/app/formulario')}>
         <Text style={styles.botonSecundarioTexto}>Registrar otro cliente</Text>
       </Pressable>
     </ScrollView>

@@ -11,6 +11,7 @@
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.dubangiron.huellitasveterinaria", //vamos a trabajar con el paquete para Android por contrario si fuera ios otra cosa
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,6 +38,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f2244de9-4eb4-4c26-b8a3-787275265d05"
+      }
     }
   }
 }

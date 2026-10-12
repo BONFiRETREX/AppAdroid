@@ -18,7 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 const TIPOS_ATENCION = [
   'Consulta general',
@@ -135,7 +135,7 @@ export default function CitasScreen() {
       // Se abre la pantalla de resultado con los datos recien guardados.
       // Los parametros de una ruta se envian como texto, de ahi String().
       router.push({
-        pathname: './resultado',
+        pathname: '/app/resultado',
         params: {
           id: String(cliente.id),
           nombre: cliente.nombre,

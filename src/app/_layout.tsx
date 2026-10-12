@@ -1,78 +1,52 @@
-import { DarkTheme, DefaultTheme, ThemeProvider, Stack } from 'expo-router';
-import { useColorScheme, StatusBar } from 'react-native';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { ActivityIndicator, StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+
+import { AuthProvider, useAuth } from '../context/AuthContext';
+
+function NavegacionRaiz() {
+  const { session, cargando } = useAuth();
+
+  if (cargando) {
+    return (
+      <View style={styles.cargando}>
+        <ActivityIndicator size="large" color="#2F7D4A" />
+      </View>
+    );
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      {/* Rutas públicas: login y registro. */}
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="auth" />
+      </Stack.Protected>
+
+      {/* Todas las pantallas de la veterinaria requieren sesión. */}
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="app" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider
-      value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-    >
-
-      {/* Barra de estado superior */}
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="#FFFFFF"
-      />
-
-      <Stack>
-
-        {/* Pantalla principal */}
-        <Stack.Screen
-          name="index"
-          options={{
-            title: 'Huellitas Veterinaria',
-          }}
-        />
-
-        {/* Registro de clientes */}
-        <Stack.Screen
-          name="citas"
-          options={{
-            title: 'Registrar cliente',
-          }}
-        />
-
-        <Stack.Screen
-          name="resultado"
-          options={{
-            title: 'Cliente registrado',
-          }}
-        />
-
-        <Stack.Screen
-          name="registros"
-          options={{
-            title: 'Clientes registrados',
-          }}
-        />
-
-        {/* Servicios */}
-        <Stack.Screen
-          name="servicios"
-          options={{
-            title: 'Servicios',
-          }}
-        />
-
-        {/* Detalle del servicio */}
-        <Stack.Screen
-          name="producto"
-          options={{
-            title: 'Detalle del servicio',
-          }}
-        />
-
-        {/* Contacto */}
-        <Stack.Screen
-          name="contacto"
-          options={{
-            title: 'Contacto',
-          }}
-        />
-
-      </Stack>
-
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <AuthProvider>
+        <NavegacionRaiz />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  cargando: {
+    alignItems: 'center',
+    backgroundColor: '#F4FBF6',
+    flex: 1,
+    justifyContent: 'center',
+  },
+});

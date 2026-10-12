@@ -47,6 +47,9 @@ export default function HomeScreen() {
           Cuidamos la salud y bienestar de tus mascotas con atención profesional y mucho cariño.
         </Text>
 
+        <Pressable style={styles.botonPerfil} onPress={() => router.push('/app/perfil')}>
+          <Text style={styles.textoPerfil}>Mi perfil</Text>
+        </Pressable>
 
         {/* ========================= */}
         {/* FORMULARIO */}
@@ -54,7 +57,7 @@ export default function HomeScreen() {
 
         <Pressable
           style={styles.tarjetaFormulario}
-          onPress={() => router.push('/citas')}
+          onPress={() => router.push('/app/formulario')}
         >
 
           <Image
@@ -72,7 +75,7 @@ export default function HomeScreen() {
 
         <Pressable
           style={styles.tarjetaHistorial}
-          onPress={() => router.push('./registros')}
+          onPress={() => router.push('/app/registros')}
         >
 
           <Text style={styles.iconoHistorial}>
@@ -95,7 +98,7 @@ export default function HomeScreen() {
           {/* CITAS */}
           <Pressable
             style={styles.tarjetaPequena}
-            onPress={() => router.push('/citas')}
+            onPress={() => router.push('/app/formulario')}
           >
 
             <Text style={styles.icono}>
@@ -112,7 +115,7 @@ export default function HomeScreen() {
           {/* CONTACTO */}
           <Pressable
             style={styles.tarjetaPequena}
-            onPress={() => router.push('/contacto')}
+            onPress={() => router.push('/app/contacto')}
           >
 
             <Image
@@ -132,7 +135,7 @@ export default function HomeScreen() {
           {/* PRODUCTOS */}
           <Pressable
             style={styles.tarjetaPequena}
-            onPress={() => router.push('/producto')}
+            onPress={() => router.push('/app/imagenes')}
           >
 
             <Text style={styles.icono}>
@@ -149,7 +152,7 @@ export default function HomeScreen() {
           {/* SERVICIOS */}
           <Pressable
             style={styles.tarjetaPequena}
-            onPress={() => router.push('/servicios')}
+            onPress={() => router.push('/app/servicios')}
           >
 
             <Text style={styles.icono}>
@@ -225,6 +228,23 @@ const styles = StyleSheet.create({
     fontFamily: 'serif',
     textAlign: 'center',
     paddingHorizontal: 25,
+  },
+
+  botonPerfil: {
+    alignItems: 'center',
+    backgroundColor: '#EAF7EE',
+    borderColor: '#2F7D4A',
+    borderRadius: 18,
+    borderWidth: 1,
+    marginTop: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+  },
+
+  textoPerfil: {
+    color: '#1F6138',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 
 

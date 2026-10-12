@@ -47,7 +47,7 @@ export default function Contacto() {
 
       <Pressable
         style={styles.boton}
-        onPress={() => router.push('/citas')}>
+        onPress={() => router.push('/app/formulario')}>
         <Text style={styles.botonTexto}>
           Solicitar una cita
         </Text>

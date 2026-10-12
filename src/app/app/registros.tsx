@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../../lib/supabase';
 
 type ClienteVeterinaria = {
   id: number;
