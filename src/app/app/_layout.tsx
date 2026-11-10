@@ -8,6 +8,9 @@ export default function VeterinariaLayout() {
       <Stack.Screen name="formulario" />
       <Stack.Screen name="resultado" />
       <Stack.Screen name="registros" />
+      <Stack.Screen name="catalogo" />
+      <Stack.Screen name="detalle" />
+      <Stack.Screen name="escanear" />
       <Stack.Screen name="imagenes" />
       <Stack.Screen name="servicios" />
       <Stack.Screen name="contacto" />

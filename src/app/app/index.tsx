@@ -88,6 +88,15 @@ export default function HomeScreen() {
 
         </Pressable>
 
+        <Text style={styles.tituloSeccion}>Escáner QR</Text>
+
+        <View style={styles.filaCatalogo}>
+          <Pressable style={styles.tarjetaCatalogo} onPress={() => router.push('/app/escanear')}>
+            <Text style={styles.iconoCatalogo}>📷</Text>
+            <Text style={styles.tituloCatalogo}>Escanear código QR</Text>
+          </Pressable>
+        </View>
+
 
         {/* ========================= */}
         {/* 4 OPCIONES EN UNA LÍNEA */}
@@ -283,6 +292,48 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#2F7D4A',
     marginTop: 3,
+  },
+
+  tituloSeccion: {
+    color: '#1F6138',
+    fontFamily: 'serif',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 22,
+  },
+
+  filaCatalogo: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    marginTop: 10,
+    width: '92%',
+  },
+
+  tarjetaCatalogo: {
+    alignItems: 'center',
+    backgroundColor: '#F3FBF5',
+    borderColor: '#A8D5B5',
+    borderRadius: 16,
+    borderWidth: 1,
+    flex: 1,
+    minHeight: 100,
+    justifyContent: 'center',
+    paddingHorizontal: 6,
+    paddingVertical: 12,
+  },
+
+  iconoCatalogo: {
+    fontSize: 30,
+  },
+
+  tituloCatalogo: {
+    color: '#2F7D4A',
+    fontFamily: 'serif',
+    fontSize: 13,
+    fontWeight: 'bold',
+    marginTop: 6,
+    textAlign: 'center',
   },
 
   imagenFormulario: {
