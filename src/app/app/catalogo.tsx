@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from "react-native";
-
 import { useRouter } from "expo-router";
 
 import { supabase } from "../../../lib/supabase";
@@ -16,107 +15,96 @@ type ItemCatalogo = {
   codigo: string;
   titulo: string;
   descripcion: string;
-  precio: number | string;
-  created_at: string;
-  detalle: string;
+  detalle: string | null;
+  precio: number | string | null;
+  created_at: string | null;
 };
 
-const productosEjemplo: ItemCatalogo[] = [
-  {
-    codigo: "VET-001",
-    titulo: "Correa para perro grande",
-    descripcion: "Correa reforzada para paseos de perros grandes.",
-    precio: 65000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Correa ajustable con mosquetón metálico y agarre acolchado.",
-  },
-  {
-    codigo: "VET-002",
-    titulo: "Alimento premium para perros",
-    descripcion: "Alimento balanceado para perros adultos.",
-    precio: 120000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Bolsa de 3 kg con proteínas, vitaminas y minerales.",
-  },
-  {
-    codigo: "VET-003",
-    titulo: "Juguete mordedor resistente",
-    descripcion: "Juguete de caucho para el entretenimiento de perros.",
-    precio: 25000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Ayuda a estimular el juego y el cuidado dental.",
-  },
-  {
-    codigo: "VET-004",
-    titulo: "Shampoo hipoalergénico",
-    descripcion: "Shampoo suave para perros y gatos con piel sensible.",
-    precio: 38000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Presentación de 500 ml, libre de parabenos.",
-  },
-  {
-    codigo: "VET-005",
-    titulo: "Collar antipulgas",
-    descripcion: "Collar de protección contra pulgas y garrapatas.",
-    precio: 42000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Protección continua para mascotas según las indicaciones del empaque.",
-  },
-  {
-    codigo: "VET-006",
-    titulo: "Transportadora para gatos",
-    descripcion: "Transportadora ventilada para llevar gatos de forma segura.",
-    precio: 95000,
-    created_at: "2026-01-01T00:00:00.000Z",
-    detalle: "Cuenta con puerta frontal y espacio cómodo para el traslado.",
-  },
-];
+function obtenerMensajeError(error: unknown) {
+  return error instanceof Error
+    ? error.message
+    : typeof error === "object" && error !== null && "message" in error
+      ? String(error.message)
+      : String(error);
+}
+
+async function consultarCatalogo() {
+  const { data, error } = await supabase
+    .from("catalogo")
+    .select("codigo, titulo, descripcion, detalle, precio, created_at")
+    .order("titulo", { ascending: true });
+
+  if (error) {
+    console.error("Error Supabase:", error);
+    throw error;
+  }
+
+  console.log("Productos recibidos:", data);
+  return (data ?? []) as ItemCatalogo[];
+}
 
 export default function CatalogoScreen() {
   const router = useRouter();
   const [items, setItems] = useState<ItemCatalogo[]>([]);
   const [cargando, setCargando] = useState(true);
-  const [errorText, setErrorText] = useState("");
+  const [errorTexto, setErrorTexto] = useState("");
 
   const cargarCatalogo = useCallback(async () => {
     setCargando(true);
-    setErrorText("");
+    setErrorTexto("");
 
     try {
-      const { data, error } = await supabase
-        .from("catalogo")
-        .select("codigo, titulo, descripcion, precio, created_at, detalle")
-        .order("titulo", { ascending: true });
-
-      if (error) {
-        console.error("Error Supabase:", error);
-        throw error;
-      }
-
-      console.log("Productos recibidos:", data);
-      setItems((data ?? []) as ItemCatalogo[]);
+      setItems(await consultarCatalogo());
     } catch (error: unknown) {
       console.error("Error al cargar catálogo:", error);
-      const mensaje =
-        error instanceof Error
-          ? error.message
-          : typeof error === "object" && error !== null && "message" in error
-            ? String(error.message)
-            : String(error);
-
       setItems([]);
-      setErrorText("No fue posible cargar: " + mensaje);
+      setErrorTexto("No fue posible cargar: " + obtenerMensajeError(error));
     } finally {
       setCargando(false);
     }
   }, []);
 
   useEffect(() => {
-    void cargarCatalogo();
-  }, [cargarCatalogo]);
+    let activo = true;
 
-  const mostrarEjemplos = !cargando && !errorText && items.length === 0;
-  const itemsMostrados = mostrarEjemplos ? productosEjemplo : items;
+    async function cargarInicial() {
+      try {
+        const productos = await consultarCatalogo();
+
+        if (activo) {
+          setItems(productos);
+        }
+      } catch (error: unknown) {
+        console.error("Error al cargar catálogo:", error);
+
+        if (activo) {
+          setItems([]);
+          setErrorTexto("No fue posible cargar: " + obtenerMensajeError(error));
+        }
+      } finally {
+        if (activo) {
+          setCargando(false);
+        }
+      }
+    }
+
+    void cargarInicial();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
+
+  const abrirDetalle = (codigo: string) => {
+    router.push({
+      pathname: "/app/detalle",
+      params: { codigo },
+    });
+  };
+
+  const renderizarProducto = ({ item }: { item: ItemCatalogo }) => {
+    return <TarjetaCatalogo elemento={item} onPress={() => abrirDetalle(item.codigo)} />;
+  };
 
   if (cargando) {
     return (
@@ -130,23 +118,18 @@ export default function CatalogoScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={itemsMostrados}
+        data={items}
         keyExtractor={(item) => item.codigo}
-        onRefresh={cargarCatalogo}
+        renderItem={renderizarProducto}
+        onRefresh={() => void cargarCatalogo()}
         refreshing={cargando}
-        contentContainerStyle={
-          itemsMostrados.length === 0 ? styles.listaVacia : styles.lista
-        }
+        contentContainerStyle={items.length === 0 ? styles.listaVacia : styles.lista}
         ListHeaderComponent={
           <View style={styles.encabezado}>
             <Text style={styles.titulo}>Catálogo veterinario</Text>
-            <Text style={styles.subtitulo}>
-              Servicios y productos registrados
-            </Text>
-            {mostrarEjemplos ? (
-              <Text style={styles.avisoEjemplo}>Productos de ejemplo</Text>
-            ) : null}
+            <Text style={styles.subtitulo}>Productos registrados en Huellitas Veterinaria</Text>
             <Pressable
+              accessibilityLabel="Cargar nuevamente el catálogo"
               style={styles.botonCargar}
               onPress={() => void cargarCatalogo()}
             >
@@ -155,45 +138,38 @@ export default function CatalogoScreen() {
           </View>
         }
         ListEmptyComponent={
-          cargando ? (
-            <View style={styles.centro}>
-              <ActivityIndicator size="large" color="#2F7D4A" />
-              <Text style={styles.cargandoTexto}>Consultando productos en Supabase...</Text>
-            </View>
-          ) : (
-            <View style={styles.centro}>
-              <Text style={styles.mensaje}>
-                {errorText || "Aún no hay elementos en el catálogo."}
-              </Text>
-              {errorText ? (
-                <Pressable
-                  style={styles.botonReintentar}
-                  onPress={cargarCatalogo}
-                >
-                  <Text style={styles.botonReintentarTexto}>Reintentar</Text>
-                </Pressable>
-              ) : null}
-            </View>
-          )
+          <View style={styles.centro}>
+            <Text style={styles.mensaje}>
+              {errorTexto || "Aún no hay productos en el catálogo."}
+            </Text>
+            {errorTexto ? (
+              <Pressable style={styles.botonReintentar} onPress={() => void cargarCatalogo()}>
+                <Text style={styles.botonReintentarTexto}>Reintentar</Text>
+              </Pressable>
+            ) : null}
+          </View>
         }
-        renderItem={renderizarProducto}
         ListFooterComponent={
-          <View style={styles.acciones}>
-            <Pressable
-              style={styles.boton}
-              onPress={() => router.push("/app/detalle")}
-            >
-              <Text style={styles.botonTexto}>Ver pantalla de detalle</Text>
-            </Pressable>
-            <Pressable
-              style={styles.botonSecundario}
-              onPress={() => router.push("/app/escanear")}
-            >
-              <Text style={styles.botonSecundarioTexto}>Abrir escáner</Text>
-            </Pressable>
-            <Pressable style={styles.volver} onPress={() => router.back()}>
-              <Text style={styles.volverTexto}>Regresar</Text>
-            </Pressable>
+          <View>
+            <View style={styles.acciones}>
+              <Pressable
+                accessibilityLabel="Mostrar los códigos QR de prueba uno por uno"
+                style={styles.botonQrPruebas}
+                onPress={() => router.push("/app/qr-pruebas")}
+              >
+                <Text style={styles.botonQrPruebasTexto}>▣ Ver QR de prueba</Text>
+              </Pressable>
+              <Pressable
+                accessibilityLabel="Abrir el escáner de códigos QR"
+                style={styles.botonEscaner}
+                onPress={() => router.push("/app/escanear")}
+              >
+                <Text style={styles.botonEscanerTexto}>📷 Escanear código QR</Text>
+              </Pressable>
+              <Pressable style={styles.volver} onPress={() => router.back()}>
+                <Text style={styles.volverTexto}>Regresar al inicio</Text>
+              </Pressable>
+            </View>
           </View>
         }
       />
@@ -201,18 +177,27 @@ export default function CatalogoScreen() {
   );
 }
 
-function renderizarProducto({ item }: { item: ItemCatalogo }) {
-  return <TarjetaCatalogo elemento={item} />;
-}
-
-function TarjetaCatalogo({ elemento }: { elemento: ItemCatalogo }) {
+function TarjetaCatalogo({
+  elemento,
+  onPress,
+}: {
+  elemento: ItemCatalogo;
+  onPress: () => void;
+}) {
   return (
-    <View style={styles.tarjeta}>
+    <Pressable
+      accessibilityLabel={`Ver detalles de ${elemento.titulo}`}
+      style={({ pressed }) => [styles.tarjeta, pressed && styles.tarjetaPresionada]}
+      onPress={onPress}
+    >
       <Text style={styles.codigo}>{elemento.codigo}</Text>
       <Text style={styles.nombre}>{elemento.titulo}</Text>
       <Text style={styles.descripcion}>{elemento.descripcion}</Text>
-      <Text style={styles.precio}>{formatearPrecio(elemento.precio)}</Text>
-    </View>
+      <Text style={styles.precio}>
+        {elemento.precio == null ? "Precio por consultar" : formatearPrecio(elemento.precio)}
+      </Text>
+      <Text style={styles.verDetalle}>Ver detalles</Text>
+    </Pressable>
   );
 }
 
@@ -241,13 +226,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: "center",
   },
-  avisoEjemplo: {
-    color: "#8A5A00",
-    fontSize: 13,
-    fontWeight: "600",
-    marginTop: 8,
-    textAlign: "center",
-  },
   botonCargar: {
     alignItems: "center",
     alignSelf: "center",
@@ -265,10 +243,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 16,
   },
+  tarjetaPresionada: { opacity: 0.78 },
   codigo: { color: "#2F7D4A", fontSize: 13, fontWeight: "700" },
   nombre: { color: "#1F2937", fontSize: 18, fontWeight: "bold", marginTop: 5 },
   descripcion: { color: "#4B5563", fontSize: 15, lineHeight: 21, marginTop: 7 },
   precio: { color: "#2F7D4A", fontSize: 17, fontWeight: "bold", marginTop: 10 },
+  verDetalle: { color: "#1F6138", fontSize: 14, fontWeight: "700", marginTop: 12 },
   centro: {
     alignItems: "center",
     flex: 1,
@@ -296,17 +276,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   botonReintentarTexto: { color: "#FFFFFF", fontWeight: "bold" },
-  acciones: { alignItems: "center", marginTop: 10 },
-  boton: {
+  acciones: { alignItems: "center", marginTop: 8 },
+  botonQrPruebas: {
     alignItems: "center",
-    backgroundColor: "#2F7D4A",
+    backgroundColor: "#EAF7EE",
+    borderColor: "#2F7D4A",
     borderRadius: 12,
-    marginTop: 16,
+    borderWidth: 1,
+    marginTop: 12,
     padding: 15,
     width: "100%",
   },
-  botonTexto: { color: "#FFFFFF", fontSize: 16, fontWeight: "bold" },
-  botonSecundario: {
+  botonQrPruebasTexto: { color: "#1F6138", fontSize: 16, fontWeight: "bold" },
+  botonEscaner: {
     alignItems: "center",
     borderColor: "#2F7D4A",
     borderRadius: 12,
@@ -315,7 +297,7 @@ const styles = StyleSheet.create({
     padding: 15,
     width: "100%",
   },
-  botonSecundarioTexto: { color: "#2F7D4A", fontSize: 16, fontWeight: "bold" },
+  botonEscanerTexto: { color: "#2F7D4A", fontSize: 16, fontWeight: "bold" },
   volver: { marginTop: 14, padding: 10 },
   volverTexto: { color: "#2F7D4A", fontSize: 15, fontWeight: "bold" },
 });

@@ -16,7 +16,7 @@ type ItemCatalogo = {
   descripcion: string;
   precio: number | string | null;
   created_at: string;
-  detalle: string;
+  detalle: string | null;
 };
 
 export default function DetalleScreen() {
@@ -107,7 +107,7 @@ export default function DetalleScreen() {
           <Text style={styles.titulo}>{item.titulo}</Text>
           <Text style={styles.codigo}>{item.codigo}</Text>
           <Text style={styles.descripcion}>{item.descripcion}</Text>
-          <Text style={styles.detalle}>{item.detalle}</Text>
+          <Text style={styles.detalle}>{item.detalle || "Sin detalle adicional."}</Text>
 
           {item.precio != null ? (
             <Text style={styles.precio}>{formatearPrecio(item.precio)}</Text>
@@ -118,7 +118,7 @@ export default function DetalleScreen() {
       )}
 
       <Pressable style={styles.boton} onPress={() => router.back()}>
-        <Text style={styles.botonTexto}>Regresar al catálogo</Text>
+        <Text style={styles.botonTexto}>Volver</Text>
       </Pressable>
     </ScrollView>
   );

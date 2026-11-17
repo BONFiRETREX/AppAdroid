@@ -1,56 +1,84 @@
-# Welcome to your Expo app 👋
+# Huellitas Veterinaria
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación móvil en Expo y React Native para registrar clientes y mascotas, consultar un catálogo veterinario en Supabase y abrir la ficha correcta al leer un código QR.
 
-## Get started
+## Funcionalidades para la entrega
 
-1. Install dependencies
+- Registro e historial de clientes protegidos con autenticación de Supabase.
+- Catálogo de productos veterinarios consultado desde `public.catalogo`.
+- Ficha de producto por código.
+- Cámara real con `expo-camera` para leer códigos QR.
+- Manejo de permisos, QR inválidos, productos inexistentes y errores de Supabase.
 
-   ```bash
-   npm install
-   ```
+## Instalación
 
-2. Start the app
+Usa siempre esta carpeta interna del proyecto:
 
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```powershell
+cd "C:\Users\Asus-Pc\Desktop\DubanProg\sem 6b\disp-moviles\MiApp\MiPrimeraApp\MiPrimeraApp"
+npm install
+npx expo start --clear
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Instala Expo Go compatible con el SDK indicado por la dependencia `expo` de `package.json`. Para probar la cámara, usa un celular físico y concede el permiso cuando la aplicación lo solicite.
 
-### Other setup steps
+## Variables de entorno
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+1. Copia `.env.example` y nómbralo `.env`.
+2. Conserva la URL pública de Supabase y pega únicamente la **Publishable key** en `EXPO_PUBLIC_SUPABASE_KEY`.
+3. Nunca agregues una clave `service_role` al proyecto ni la subas a GitHub.
 
-## Learn more
+## Configuración de Supabase
 
-To learn more about developing your project with Expo, look at the following resources:
+En Supabase abre **SQL Editor**, crea una consulta nueva y ejecuta:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```text
+supabase/03_catalogo_veterinaria_qr.sql
+```
 
-## Join the community
+El script crea o completa `public.catalogo`, agrega cuatro productos veterinarios de prueba y aplica RLS con lectura de catálogo únicamente. No cambia `clientes_veterinaria` ni información personal.
 
-Join our community of developers creating universal apps.
+Después verifica en **Table Editor** que los códigos existen:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Código | Producto |
+| --- | --- |
+| `VET-001` | Correa para perro grande |
+| `VET-002` | Alimento premium para perros |
+| `VET-003` | Collar antipulgas |
+| `VET-004` | Transportadora para gatos |
+
+## QR para la demostración
+
+Los PNG ya están listos en `docs/qr/`. Desde Catálogo usa **Ver QR de prueba** para mostrar uno por vez; así la cámara no puede leer otro QR por error. Ábrelos en otro dispositivo o imprímelos para la demostración. Cada QR contiene solamente uno de estos valores, sin URL, espacios ni claves:
+
+- `VET-001`
+- `VET-002`
+- `VET-003`
+- `VET-004`
+
+El archivo `docs/qr/QR-TRAMPA.png` es la prueba inválida. La aplicación debe mostrar que ese producto no existe y permitir escanear de nuevo.
+
+## Recorrido de prueba
+
+1. Inicia sesión en la aplicación.
+2. En Inicio abre **Catálogo interactivo** y comprueba que aparecen los registros reales de Supabase.
+3. Pulsa **Ver detalles** en un producto y confirma que se muestra su mismo código, título, descripción, detalle y precio.
+4. Regresa al inicio o al catálogo, abre **Escanear código QR** y concede el permiso de cámara.
+5. Escanea `VET-001` y comprueba que se abre su ficha.
+6. Repite con otros dos códigos válidos y con `QR-TRAMPA`.
+
+## Verificación técnica
+
+```powershell
+npx tsc --noEmit
+npm run lint
+```
+
+## Guion sugerido para el video
+
+El video dura como máximo cinco minutos y deben participar los dos integrantes:
+
+1. Presentar Huellitas Veterinaria y su propósito.
+2. Mostrar `catalogo.tsx`, `detalle.tsx`, `escanear.tsx`, `index.tsx`, `_layout.tsx` y el archivo SQL.
+3. Mostrar en Supabase la tabla `catalogo` y sus políticas de solo lectura.
+4. Demostrar catálogo, detalle, tres QR válidos y `QR-TRAMPA` en la cámara real del celular.

@@ -8,9 +8,11 @@ import {
 } from 'react-native';
 
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <LinearGradient
       colors={['#8193e6', '#BFE3C8', '#5C9F71']}
@@ -88,9 +90,14 @@ export default function HomeScreen() {
 
         </Pressable>
 
-        <Text style={styles.tituloSeccion}>Escáner QR</Text>
+        <Text style={styles.tituloSeccion}>Catálogo y QR</Text>
 
         <View style={styles.filaCatalogo}>
+          <Pressable style={styles.tarjetaCatalogo} onPress={() => router.push('/app/catalogo')}>
+            <Text style={styles.iconoCatalogo}>🛍️</Text>
+            <Text style={styles.tituloCatalogo}>Catálogo interactivo</Text>
+          </Pressable>
+
           <Pressable style={styles.tarjetaCatalogo} onPress={() => router.push('/app/escanear')}>
             <Text style={styles.iconoCatalogo}>📷</Text>
             <Text style={styles.tituloCatalogo}>Escanear código QR</Text>

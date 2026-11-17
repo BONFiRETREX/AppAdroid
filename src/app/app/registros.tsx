@@ -17,6 +17,27 @@ type ClienteVeterinaria = {
   mascota_enferma: boolean;
 };
 
+function obtenerMensajeError(error: unknown) {
+  return error instanceof Error
+    ? error.message
+    : typeof error === 'object' && error !== null && 'message' in error
+      ? String(error.message)
+      : String(error);
+}
+
+async function consultarClientes() {
+  const { data, error } = await supabase
+    .from('clientes_veterinaria')
+    .select('*')
+    .order('id', { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as ClienteVeterinaria[];
+}
+
 export default function RegistrosScreen() {
   const [clientes, setClientes] = useState<ClienteVeterinaria[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -25,23 +46,48 @@ export default function RegistrosScreen() {
   const cargarClientes = useCallback(async () => {
     setCargando(true);
     setError(null);
-    const { data, error: errorConsulta } = await supabase
-      .from('clientes_veterinaria')
-      .select('*')
-      .order('id', { ascending: false });
 
-    if (errorConsulta) {
-      setError(errorConsulta.message);
+    try {
+      setClientes(await consultarClientes());
+    } catch (error: unknown) {
+      console.error('Error al cargar clientes:', error);
       setClientes([]);
-    } else {
-      setClientes((data ?? []) as ClienteVeterinaria[]);
+      setError(obtenerMensajeError(error));
+    } finally {
+      setCargando(false);
     }
-    setCargando(false);
   }, []);
 
   useEffect(() => {
-    void cargarClientes();
-  }, [cargarClientes]);
+    let activo = true;
+
+    async function cargarInicial() {
+      try {
+        const datos = await consultarClientes();
+
+        if (activo) {
+          setClientes(datos);
+        }
+      } catch (error: unknown) {
+        console.error('Error al cargar clientes:', error);
+
+        if (activo) {
+          setClientes([]);
+          setError(obtenerMensajeError(error));
+        }
+      } finally {
+        if (activo) {
+          setCargando(false);
+        }
+      }
+    }
+
+    void cargarInicial();
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   return (
     <View style={styles.container}>

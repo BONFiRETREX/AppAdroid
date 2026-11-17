@@ -8,9 +8,10 @@ export default function VeterinariaLayout() {
       <Stack.Screen name="formulario" />
       <Stack.Screen name="resultado" />
       <Stack.Screen name="registros" />
-      <Stack.Screen name="catalogo" />
-      <Stack.Screen name="detalle" />
-      <Stack.Screen name="escanear" />
+      <Stack.Screen name="catalogo" options={{ title: 'Catálogo veterinario' }} />
+      <Stack.Screen name="detalle" options={{ title: 'Detalle del producto' }} />
+      <Stack.Screen name="qr-pruebas" options={{ title: 'QR de prueba' }} />
+      <Stack.Screen name="escanear" options={{ title: 'Escanear QR' }} />
       <Stack.Screen name="imagenes" />
       <Stack.Screen name="servicios" />
       <Stack.Screen name="contacto" />
